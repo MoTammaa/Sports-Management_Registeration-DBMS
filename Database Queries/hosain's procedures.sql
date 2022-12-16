@@ -262,13 +262,30 @@ update Match
 set stadium_ID = @stadium_id where match_ID = @match_id
 
 -- inserting tickets for the match
-declare @counter int;
-set @counter = 0
-WHILE @i <= 30
+declare @numOfTickets int
+select @numOfTickets = s.capacity
+from stadium s
+where s.ID = @stadium_id
+
+declare @counter int = 0;
+WHILE  @counter < @numOfTickets
+begin
+	exec dbo.addTicket @host_name , @guest_name , @start_time
+	set @counter = @counter + 1
+end
+
+
+
+
+	/*
+	WHILE @i <= 30
 	BEGIN
 		PRINT (@i);
 		SET @i = @i + 10;
 	END;
+	*/
+
+
 
 go 
 create proc addFan 
