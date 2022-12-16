@@ -77,9 +77,28 @@ AS
 GO
 ---viii
 
+--DROP PROCEDURE deleteClub;
 CREATE PROC deleteClub
 @club VARCHAR(20)
 AS
+	-----//FIRST BRANCH
+	--handling cascade alternatives
+	UPDATE Match	SET Match.guest_club_id = NULL
+		WHERE Match.guest_club_id IN 
+			(SELECT club_id FROM CLUB WHERE Club.name = @club)
+
+	--deleting corresponding requests to matches
+	DELETE FROM HostRequest WHERE HostRequest.match_ID = ANY (SELECT M.match_id FROM MATCH M WHERE M.guest_club_id IS NULL OR M.host_club_id IS NULL)
+	
+	
+	-----//SECOND BRANCH
+	--checking which Club Representative will be deleted and deleting corresponding requests before deleting club
+	--I guess unnecassary
+	DELETE FROM HostRequest WHERE HostRequest.representative_ID = 
+		ANY (SELECT R.ID FROM ClubRepresentative R WHERE R.club_ID IN 
+				(SELECT club_id FROM CLUB WHERE Club.name = @club))
+
+	--delete club finally
 	DELETE FROM Club WHERE Club.name = @club
 GO
 ---x

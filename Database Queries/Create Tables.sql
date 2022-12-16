@@ -87,7 +87,7 @@ CREATE PROC createAllTables AS
 				ON DELETE CASCADE		ON UPDATE CASCADE,
 		guest_club_ID INT, 
 			CONSTRAINT G_FK FOREIGN KEY(guest_club_ID) REFERENCES Club
-				 ON DELETE CASCADE		ON UPDATE CASCADE,
+				 ON DELETE NO ACTION	ON UPDATE NO ACTION,
 		stadium_ID INT,
 			CONSTRAINT M_S_FK FOREIGN KEY(stadium_ID) REFERENCES Stadium
 				 ON DELETE CASCADE		ON UPDATE CASCADE
@@ -97,13 +97,13 @@ CREATE PROC createAllTables AS
 		ID  INT PRIMARY KEY IDENTITY,
 		representative_ID INT,
 			CONSTRAINT R_FK FOREIGN KEY (representative_id) REFERENCES ClubRepresentative
-				ON DELETE CASCADE		ON UPDATE CASCADE,
+				ON DELETE NO ACTION		ON UPDATE NO ACTION,
 		manager_ID INT,
 			CONSTRAINT MAN_FK FOREIGN KEY(manager_id) REFERENCES StadiumManager
 				 ON DELETE CASCADE		ON UPDATE CASCADE,
 		match_ID INT,
 			CONSTRAINT MAT_FK FOREIGN KEY(match_id) REFERENCES Match
-				 ON DELETE CASCADE		ON UPDATE CASCADE,
+				 ON DELETE NO ACTION	ON UPDATE NO ACTION,
 		status VARCHAR(20) NOT NULL DEFAULT 'Unhandled'	 CHECK (status IN ('Unhandled','Accepted','Rejected'))	--<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<edited
 	)
 
@@ -254,21 +254,21 @@ insert into StadiumManager (name , stadium_ID , username ) values
 ('stad manager name 5' , 5 , 'user25')
 
 insert into fan(national_id , name , birth_date , address , phone_no , status , username) values
-(12345, 'fan name 1' , '1995-1-1' , 'fan address 1' , 'fan phone num 1' , 1 , 'user26'),
-(49871, 'fan name 2' , '1995-2-12' , 'fan address 2' , 'fan phone num 2' , 1 , 'user27'),
-(28456, 'fan name 3' , '1995-3-3' , 'fan address 3' , 'fan phone num 3' , 1 , 'user28'),
-(98563, 'fan name 4' , '1995-4-4' , 'fan address 4' , 'fan phone num 4' , 1 , 'user29'),
-(67349, 'fan name 5' , '1995-5-13' , 'fan address 5' , 'fan phone num 5' , 1 , 'user30'),
-(87340, 'fan name 6' , '1996-6-14' , 'fan address 6' , 'fan phone num 6' , 1 , 'user31'),
-(98778, 'fan name 7' , '1996-7-15' , 'fan address 7' , 'fan phone num 7' , 1 , 'user32'),
-(24908, 'fan name 8' , '1996-8-22' , 'fan address 8' , 'fan phone num 8' , 1 , 'user33'),
-(32598, 'fan name 9' , '1996-9-17' , 'fan address 9' , 'fan phone num 9' , 1 , 'user34'),
-(10987, 'fan name 10' , '1996-10-19' , 'fan address 10' , 'fan phone num 10' , 1 , 'user35'),
-(34587, 'fan name 11' , '1997-11-20' , 'fan address 11' , 'fan phone num 11' , 1 , 'user36'),
-(24567, 'fan name 12' , '1997-12-2' , 'fan address 12' , 'fan phone num 12' , 1 , 'user37'),
-(24769, 'fan name 13' , '1997-1-7' , 'fan address 13' , 'fan phone num 13' , 1 , 'user38'),
-(25879, 'fan name 14' , '1997-2-4' , 'fan address 14' , 'fan phone num 14' , 0 , 'user39'),
-(10485, 'fan name 15' , '1997-3-1' , 'fan address 15' , 'fan phone num 15' , 0 , 'user40')
+(12345, 'fan name 1' , '1995-1-1' , 'fan address 1' , 111111 , 1 , 'user26'),
+(49871, 'fan name 2' , '1995-2-12' , 'fan address 2' , 22222 , 1 , 'user27'),
+(28456, 'fan name 3' , '1995-3-3' , 'fan address 3' , 333333 , 1 , 'user28'),
+(98563, 'fan name 4' , '1995-4-4' , 'fan address 4' , 44444444 , 1 , 'user29'),
+(67349, 'fan name 5' , '1995-5-13' , 'fan address 5' , 5555555 , 1 , 'user30'),
+(87340, 'fan name 6' , '1996-6-14' , 'fan address 6' , 6666666 , 1 , 'user31'),
+(98778, 'fan name 7' , '1996-7-15' , 'fan address 7' , 777777 , 1 , 'user32'),
+(24908, 'fan name 8' , '1996-8-22' , 'fan address 8' , 888888 , 1 , 'user33'),
+(32598, 'fan name 9' , '1996-9-17' , 'fan address 9' , 9999999 , 1 , 'user34'),
+(10987, 'fan name 10' , '1996-10-19' , 'fan address 10' , 1010101010 , 1 , 'user35'),
+(34587, 'fan name 11' , '1997-11-20' , 'fan address 11' , 111111111 , 1 , 'user36'),
+(24567, 'fan name 12' , '1997-12-2' , 'fan address 12' , 12121212 , 1 , 'user37'),
+(24769, 'fan name 13' , '1997-1-7' , 'fan address 13' , 13131313 , 1 , 'user38'),
+(25879, 'fan name 14' , '1997-2-4' , 'fan address 14' , 14141414 , 0 , 'user39'),
+(10485, 'fan name 15' , '1997-3-1' , 'fan address 15' , 15151515 , 0 , 'user40')
 
 
 insert into match (start_time , end_time , host_club_ID , guest_club_ID , stadium_ID) values
@@ -286,17 +286,19 @@ insert into match (start_time , end_time , host_club_ID , guest_club_ID , stadiu
 
 
 insert into HostRequest(representative_ID , manager_ID , match_ID , status) values
-(1 , 1 , 1 ,1), -- 1 : accepted , 0 : rejected , null : unhandled
-(3 , 2 , 2 ,1),
-(5 , 3 , 3 ,1),
-(7 , 4 , 4 ,1),
-(1 , 1 , 5 ,1),
-(2 , 2 , 6 ,1),
-(3 , 4 , 7 ,1),
-(5 , 4 , 8 ,1),
+(1 , 1 , 1 ,'Accepted'), -- 1 : Accepted , 2 : Rejected , DEFAULT : Unhandled
+(3 , 2 , 2 ,'Accepted'),
+(5 , 3 , 3 ,'Accepted'),
+(7 , 4 , 4 ,'Accepted'),
+(1 , 1 , 5 ,'Accepted'),
+(2 , 2 , 6 ,'Accepted'),
+(3 , 4 , 7 ,'Accepted'),
+(5 , 4 , 8 ,'Accepted'),
 
-(1 , 1 , 9 ,0),
-(3 , 2 , 10 ,null)
+(1 , 1 , 9 ,'Rejected')
+
+insert into HostRequest(representative_ID , manager_ID , match_ID ) values
+(3 , 2 , 10)
 
 insert into Ticket(status , match_ID ) values
 (0 , 1),
