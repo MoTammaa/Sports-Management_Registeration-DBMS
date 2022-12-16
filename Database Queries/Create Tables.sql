@@ -94,7 +94,7 @@ CREATE PROC createAllTables AS
 			CONSTRAINT MAN_FK FOREIGN KEY(manager_id) REFERENCES StadiumManager,
 		match_ID INT,
 			CONSTRAINT MAT_FK FOREIGN KEY(match_id) REFERENCES Match,
-		status VARCHAR NOT NULL DEFAULT 'Unhandled'		--<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<edited
+		status VARCHAR NOT NULL DEFAULT 'Unhandled'	 CHECK (status IN ('Unhandled','Accepted','Rejected'))	--<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<edited
 	)
 
 
