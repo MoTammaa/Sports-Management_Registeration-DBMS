@@ -33,7 +33,7 @@ CREATE PROC createAllTables AS
 		name VARCHAR(20),
 		birth_date DATE,
 		address VARCHAR(20),
-		phone_no VARCHAR(20),		--format example -> '+20 100 456 7890'
+		phone_no INT,		--<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<edited
 		status BIT,
 		username VARCHAR(20),
 			CONSTRAINT F_U_FK FOREIGN KEY(username) REFERENCES SystemUser ON DELETE CASCADE		ON UPDATE CASCADE
@@ -94,7 +94,7 @@ CREATE PROC createAllTables AS
 			CONSTRAINT MAN_FK FOREIGN KEY(manager_id) REFERENCES StadiumManager,
 		match_ID INT,
 			CONSTRAINT MAT_FK FOREIGN KEY(match_id) REFERENCES Match,
-		status VARCHAR--<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<edited
+		status VARCHAR NOT NULL DEFAULT 'Unhandled'		--<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<edited
 	)
 
 
