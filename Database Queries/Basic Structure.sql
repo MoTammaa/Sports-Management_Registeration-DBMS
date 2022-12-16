@@ -34,6 +34,14 @@ AS
 go
 create proc dropAllProceduresFunctionsViews
 as
+-- dropping helper functions : 
+
+drop function dbo.getName
+drop function dbo.getStadiumName
+drop function dbo.getID
+
+-- dropping all other required functions , proc and views
+
 
 drop proc createAllTables				
 drop proc dropAllTables					
