@@ -5,14 +5,14 @@
 SELECT * FROM SystemAdmin;
 SELECT * FROM SystemUser;
 SELECT * FROM Fan;
-SELECT * FROM StadiumManager;
 SELECT * FROM ClubRepresentative;
 SELECT * FROM SportsAssociationmanager;
 SELECT * FROM Club;
 SELECT * FROM HostRequest;
 SELECT * FROM Stadium;
-SELECT * FROM TicketBuyingTransactions;
+SELECT * FROM StadiumManager;
 SELECT * FROM Match;
+SELECT * FROM TicketBuyingTransactions;
 SELECT * FROM Ticket;
 
 ---------------------------
@@ -58,6 +58,11 @@ EXEC purchaseTicket '232323', 'Real Madrid', 'Barcelona','2023-9-15 09:00:00'
 EXEC dropAllTables;
 EXEC createAllTables;
 EXEC clearAllTables;
+
+
+
+EXEC deleteStadium 'stadium name 4'
+EXEC deleteClub 'club name 5'
 
 
 
