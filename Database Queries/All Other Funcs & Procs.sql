@@ -35,6 +35,7 @@ END
 
 GO
 
+
 ---ii
 
 CREATE PROC addNewMatch
@@ -50,6 +51,8 @@ AS
 
 	INSERT INTO Match VALUES (@start, @end, @host_id, @guest_id, NULL)
 GO
+
+
 ---iv
 --needs to be checked in terms of input variables
 
@@ -68,6 +71,8 @@ AS
 		Match.host_club_ID = @host_id
 		AND Match.guest_club_ID = @guest_id
 GO
+
+
 ---vi
 
 CREATE PROC addClub
@@ -75,6 +80,8 @@ CREATE PROC addClub
 AS
 	INSERT INTO Club VALUES (@club, @location)
 GO
+
+
 ---viii
 
 --DROP PROCEDURE deleteClub;
@@ -92,22 +99,38 @@ AS
 	
 	
 	-----//SECOND BRANCH
-	--checking which Club Representative will be deleted and deleting corresponding requests before deleting club
+	--|checking which Club Representative will be deleted and deleting corresponding Username and his/her requests before deleting club
+	--|*Username
+	DELETE FROM SystemUser WHERE SystemUser.username IN 
+		(SELECT  R.username FROM ClubRepresentative R WHERE R.club_ID IN 
+				(SELECT club_id FROM CLUB WHERE Club.name = @club))
+	--|*Requests
 	--I guess unnecassary
 	DELETE FROM HostRequest WHERE HostRequest.representative_ID = 
 		ANY (SELECT R.ID FROM ClubRepresentative R WHERE R.club_ID IN 
 				(SELECT club_id FROM CLUB WHERE Club.name = @club))
 
-	--delete club finally
+	--|delete club finally
 	DELETE FROM Club WHERE Club.name = @club
 GO
 ---x
 
+-- DROP PROCEDURE deleteStadium
 CREATE PROC deleteStadium
 @stadium VARCHAR(20)
 AS
+	--The stadium Manager will be automatically deleted using the cascading calls BUT,
+	-- - - - - We'll delete the corresponding username and pass from System User
+	DELETE FROM SystemUser WHERE SystemUser.username IN 
+		(SELECT username FROM StadiumManager SM INNER JOIN Stadium S
+				ON SM.stadium_ID = S.ID
+			WHERE S.name = @stadium
+		)
+	
 	DELETE FROM Stadium WHERE Stadium.name = @stadium
 GO
+
+
 ---xii
 
 CREATE PROC unblockFan
