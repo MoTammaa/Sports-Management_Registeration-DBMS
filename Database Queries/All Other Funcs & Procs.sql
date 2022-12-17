@@ -284,7 +284,7 @@ GO
 
 --DROP FUNCTION matchesRankedByAttendance
 CREATE FUNCTION matchesRankedByAttendance()--<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<edited
-RETURNS @matches TABLE(rank INT IDENTITY(1,1),host VARCHAR(20), guest VARCHAR(20))
+RETURNS @matches TABLE(host VARCHAR(20), guest VARCHAR(20))
 AS
 BEGIN
 	INSERT INTO @matches
@@ -295,6 +295,7 @@ BEGIN
 				GROUP BY dbo.getName(M.host_club_ID), dbo.getName(M.guest_club_ID), M.match_ID
 			) AS match_ticket
 			ORDER BY tickets DESC
+			offset 0 rows
 
 RETURN
 END
