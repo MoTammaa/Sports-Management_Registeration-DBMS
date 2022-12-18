@@ -311,6 +311,7 @@ BEGIN
 			(
 				SELECT dbo.getName(M.host_club_ID) AS host_team, dbo.getName(M.guest_club_ID) AS guest_team, M.match_ID,COUNT(T.ID) AS tickets 
 				FROM Match M INNER JOIN Ticket T ON T.match_ID = M.match_ID AND T.status = 0
+				where M.end_time < CURRENT_TIMESTAMP -- edited
 				GROUP BY dbo.getName(M.host_club_ID), dbo.getName(M.guest_club_ID), M.match_ID
 			) AS match_ticket
 			ORDER BY tickets DESC
