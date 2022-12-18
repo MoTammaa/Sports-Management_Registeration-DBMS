@@ -1,4 +1,4 @@
-﻿
+﻿  
 
 go -- a
 CREATE PROC createAllTables AS
@@ -304,7 +304,7 @@ DECLARE @clubID INT
 		WHERE Club.name = @club_name
 RETURN @clubID
 END
-------------------------------------------------------- 2.3
+-------------------------------------------------------- 2.3
 
 go -- i
 create proc addAssociationManager 
