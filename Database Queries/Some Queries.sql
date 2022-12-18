@@ -1,6 +1,7 @@
 ﻿--#### THIS FILE WILL NOT BE SUBMITTED
 
-
+create database project
+EXEC insertRecords
 --JUST CHECKING ALL TABLES ARE THERE
 ---------------------- higlight and press ctrl+K+U to remove comment,
 ----------------------- and ctrl+K+C to comment all lines again
@@ -18,17 +19,12 @@ SELECT * FROM TicketBuyingTransactions;
 SELECT * FROM Ticket;
 
 ---------------------------
-
+go
 EXEC createAllTables;
-
-
+EXEC dropAllTables
+EXEC dropAllProceduresFunctionsViews;
 EXEC clearAllTables;
-
-
 EXEC insertRecords
-
-
-
 
 
 
@@ -72,11 +68,7 @@ EXEC deleteClub 'club name 5'
 
 
 
---- hahhaha insert tables
 
-
---go
---DROP PROCEDURE insertRecords
 go
 create proc insertRecords as -- just for us,will delete it before submission
 
@@ -92,18 +84,12 @@ insert into Club values
 ('club name 8' , 'club location 8'),
 ('club name 9' , 'club location 9'),
 ('club name 10' , 'club location 10')
-
-
-
 insert into Stadium (name , location , capacity , status) values
 ('stadium name 1' , 'stadium location 1' , 1000 , 0),
 ('stadium name 2' , 'stadium location 2' , 2000 , 0),
 ('stadium name 3' , 'stadium location 3' , 3000 , 0),
 ('stadium name 4' , 'stadium location 4' , 4000 , 0),
 ('stadium name 5' , 'stadium location 5' , 5000 , 1)
-
-
-
 insert into SystemUser(username , password) values
 ('user1' , 'pass1'),
 ('user2' , 'pass2'),
@@ -145,22 +131,18 @@ insert into SystemUser(username , password) values
 ('user38' , 'pass38'),
 ('user39' , 'pass39'),
 ('user40' , 'pass40')
-
 insert into SystemAdmin (name , username) values
 ('admin name 1', 'user1'),
 ('admin name 2', 'user2'),
 ('admin name 3', 'user3'),
 ('admin name 4', 'user4'),
 ('admin name 5', 'user5')
-
 insert into SportsAssociationManager(name , username) values
 ('assoc manager name 1' , 'user6'),
 ('assoc manager name 2' , 'user7'),
 ('assoc manager name 3' , 'user8'),
 ('assoc manager name 4' , 'user9'),
 ('assoc manager name 5' , 'user10')
-
-
 insert into ClubRepresentative (name , club_ID , username) values
 ('club rep name 1' , 1 , 'user11'),
 ('club rep name 2' , 2 , 'user12'),
@@ -172,14 +154,12 @@ insert into ClubRepresentative (name , club_ID , username) values
 ('club rep name 8' , 8 , 'user18'),
 ('club rep name 9' , 9 , 'user19'),
 ('club rep name 10' , 10 , 'user20')
-
 insert into StadiumManager (name , stadium_ID , username ) values
 ('stad manager name 1' , 1 , 'user21'),
 ('stad manager name 2' , 2 , 'user22'),
 ('stad manager name 3' , 3 , 'user23'),
 ('stad manager name 4' , 4 , 'user24'),
 ('stad manager name 5' , 5 , 'user25')
-
 insert into fan(national_id , name , birth_date , address , phone_no , status , username) values
 (12345, 'fan name 1' , '1995-1-1' , 'fan address 1' , 111111 , 1 , 'user26'),
 (49871, 'fan name 2' , '1995-2-12' , 'fan address 2' , 22222 , 1 , 'user27'),
@@ -196,8 +176,6 @@ insert into fan(national_id , name , birth_date , address , phone_no , status , 
 (24769, 'fan name 13' , '1997-1-7' , 'fan address 13' , 13131313 , 1 , 'user38'),
 (25879, 'fan name 14' , '1997-2-4' , 'fan address 14' , 14141414 , 0 , 'user39'),
 (10485, 'fan name 15' , '1997-3-1' , 'fan address 15' , 15151515 , 0 , 'user40')
-
-
 insert into match (start_time , end_time , host_club_ID , guest_club_ID , stadium_ID) values
 ('10/15/2004 10:00:00' , '10/15/2004 11:30:00' , 1 , 2 , 1),
 ('9/14/2005 10:00:00' , '9/14/2005 11:30:00' , 3 , 4 , 2),
@@ -210,8 +188,6 @@ insert into match (start_time , end_time , host_club_ID , guest_club_ID , stadiu
 
 ('5/12/2010 10:00:00' , '5/12/2010 11:30:00' , 1 , 3 , null),
 ('7/6/2010 10:00:00' , '7/6/2010 11:30:00' , 3 , 2 , null)
-
-
 insert into HostRequest(representative_ID , manager_ID , match_ID , status) values
 (1 , 1 , 1 ,'Accepted'), -- 1 : Accepted , 2 : Rejected , DEFAULT : Unhandled
 (3 , 2 , 2 ,'Accepted'),
@@ -223,10 +199,8 @@ insert into HostRequest(representative_ID , manager_ID , match_ID , status) valu
 (5 , 4 , 8 ,'Accepted'),
 
 (1 , 1 , 9 ,'Rejected')
-
 insert into HostRequest(representative_ID , manager_ID , match_ID ) values
 (3 , 2 , 10)
-
 insert into Ticket(status , match_ID ) values
 (0 , 1),
 (0 , 1),
@@ -238,7 +212,6 @@ insert into Ticket(status , match_ID ) values
 (1 , 5),
 (1 , 6),
 (1 , 6)
-
 insert into TicketBuyingTransactions(fan_national_ID , ticket_ID) values
 (12345, 1 ),
 (49871, 2),
@@ -246,4 +219,3 @@ insert into TicketBuyingTransactions(fan_national_ID , ticket_ID) values
 (98563,  4),
 (67349,  5)
 
-go
