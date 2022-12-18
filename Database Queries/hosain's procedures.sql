@@ -355,7 +355,7 @@ where not exists (select m.match_ID
       and c1.club_id > c2.club_id
 
 go  
-CREATE FUNCTION matchesRankedByAttendance()
+CREATE FUNCTION matchWithHighestAttendance()
 RETURNS @matches TABLE(host VARCHAR(20), guest VARCHAR(20))
 AS
 BEGIN
@@ -402,8 +402,6 @@ return( with match_ids (ids)
 		      and c2.club_id = m.guest_club_ID
 			  and m.match_ID = mt.ids
         )
-
-
 
 
 
