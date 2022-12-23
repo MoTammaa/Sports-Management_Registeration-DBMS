@@ -7,10 +7,54 @@ app.secret_key = "my secret key"
 app.config["SQLALCHEMY_DATABASE_URI"] = "mssql+pyodbc://db-porject"
 db.init_app(app)
 
+#------------------------------ home page
 @app.route("/")
 def home():
     return render_template("home.html")
+#------------------------------ login page
 
+
+
+
+#------------------------------ registeration page
+
+
+
+
+#------------------------------System admin page
+@app.route("/System_admin")
+def SystemAdminFunction():
+    return render_template("System_admin.html")
+
+#------------------------------Sports Association Manager page
+
+
+
+
+
+#------------------------------Club Representative: page
+
+
+
+
+
+
+
+#------------------------------Stadium Manager page
+
+
+
+
+
+
+
+#------------------------------Fan page
+
+
+
+
+
+#------------------------------examples 
 @app.route("/clubs")
 def clubs():
     sql = "SELECT * FROM club"

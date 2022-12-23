@@ -13,23 +13,21 @@
 <hr>
 
 <h2> Add Club </h2>
-<form action="/addClub" method="post">
+<form action="/AddClub" method="post">
 	<label> Name </label>
 	<input type="text" name="club_name"/> 
-
 	<label> Location </label>
 	<input type="text" name="club_location"/> <br><br>
-
 	<input type="submit" value="Add Club">
 </form>
+
 <hr>
 
 <h2>Delete Club </h2>
-
-<form action="/clubs/delete" method="post">
-	<label> Name </label>
-	<input type="text" name="name"/> <br>
-
+<form action="DeleteClub" method="post">
+	<label> Name </label> 	
+	<input type="text" name="name"/> <br><br>
 	<input type="submit" value="Delete Club">
 </form>
+
 <hr>
