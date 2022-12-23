@@ -20,8 +20,8 @@ def login():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+        username = request.form["username"]
+        password = request.form["password"]
         # Ensure username was submitted
         if not username or ('--' in username):
             return render_template("login.html", logMes="must provide a valid username"), 403
