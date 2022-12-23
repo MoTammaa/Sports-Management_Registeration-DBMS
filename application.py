@@ -32,8 +32,9 @@ def SystemAdminFunction():
 
 #------------------------------Sports Association Manager page
 
-
-
+@app.route("/Sports_Association_Manager")
+def AssocManagerFunction():
+    return render_template("Sports_Association_Manager.html")
 
 
 #------------------------------Club Representative: page
