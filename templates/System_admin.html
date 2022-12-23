@@ -8,16 +8,26 @@
 {% endif %}
 {% endwith %}
 
+<!DOCTYPE html>
+{% extends "layout.html" %}
+
+{% block title %}
+    Your Title
+{% endblock %}
+
+{% block main %}
+
+
 <h1> Welcome (admin name)! {{ admin_name }} </h1> <!-- admin_name is passed from regestraition page-->
 
 <hr>
 
 <h2> Add Club </h2>
 <form action="/AddClub" method="post">
-	<label> Name </label>
-	<input type="text" name="club_name"/> 
-	<label> Location </label>
-	<input type="text" name="club_location"/> <br><br>
+	<label> Club Name </label>
+	<input type="text" name="Added_club_name"/> 
+	<label> Club Location </label>
+	<input type="text" name="Added_club_location"/> <br><br>
 	<input type="submit" value="Add Club">
 </form>
 
@@ -25,9 +35,42 @@
 
 <h2>Delete Club </h2>
 <form action="DeleteClub" method="post">
-	<label> Name </label> 	
-	<input type="text" name="name"/> <br><br>
+	<label> Club Name </label> 	
+	<input type="text" name="Deleted_club_name"/> <br><br>
 	<input type="submit" value="Delete Club">
 </form>
 
 <hr>
+
+<h2>Add Stadium </h2>
+<form action="AddStadium" method="post">
+	<label> Stadium Name </label> 	
+	<input type="text" name="Added_stadium_name"/> 
+	<label> Stadium Location </label> 	
+	<input type="text" name="Added_stadium_location"/> 
+	<label> Stadium Capacity </label> 	
+	<input type="text" name="Added_stadium_capacity"/> <br><br>
+	<input type="submit" value="Add Stadium"> 
+</form>
+
+<hr>
+
+<h2>Delete Stadium </h2>
+<form action="DeleteStadium" method="post">
+	<label> Stadium Name </label> 	
+	<input type="text" name="Deleted_stadium_name"/> <br><br>
+	<input type="submit" value="Delete Stadium"> 
+</form>
+
+<hr>
+
+<h2>Block Fan </h2>
+<form action="BlockFan" method="post">
+	<label> Fan National ID </label> 	
+	<input type="text" name="Blocked_Fan_national_id"/> <br><br>
+	<input type="submit" value="Block Fan"> 
+</form>
+
+
+{% endblock %}
+
