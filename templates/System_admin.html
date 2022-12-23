@@ -1,0 +1,35 @@
+<!doctype html>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+	{% for message in messages %}
+		<h2>{{ message }}</h2>
+	{% endfor %}
+{% endif %}
+{% endwith %}
+
+<h1> Welcome (admin name)! {{ admin_name }} </h1> <!-- admin_name is passed from regestraition page-->
+
+<hr>
+
+<h2> Add Club </h2>
+<form action="/addClub" method="post">
+	<label> Name </label>
+	<input type="text" name="club_name"/> 
+
+	<label> Location </label>
+	<input type="text" name="club_location"/> <br><br>
+
+	<input type="submit" value="Add Club">
+</form>
+<hr>
+
+<h2>Delete Club </h2>
+
+<form action="/clubs/delete" method="post">
+	<label> Name </label>
+	<input type="text" name="name"/> <br>
+
+	<input type="submit" value="Delete Club">
+</form>
+<hr>
