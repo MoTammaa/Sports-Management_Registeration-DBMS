@@ -42,3 +42,9 @@ def delete_club():
     flash(f"Club {name} deleted successfully!")
 
     return redirect(url_for('home'))
+
+
+@app.route("/login")
+def login():
+
+    return render_template("login.html")

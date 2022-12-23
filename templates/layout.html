@@ -24,13 +24,13 @@
 
 
 
-        {% if get_flashed_messages() %}
-        <header>
-            <div class="alert alert-primary mb-0 text-center" role="alert">
-                {{ get_flashed_messages() | join(" ") }}
-            </div>
-        </header>
-    {% endif %}
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <h2>{{ message }}</h2>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
 
     <main class="container-fluid py-5 text-center">
         {% block main %}    {% endblock %}
