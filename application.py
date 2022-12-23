@@ -13,9 +13,7 @@ def home():
     return render_template("home.html")
 #------------------------------ login page
 
-@app.route("/test")
-def hiii():
-    return render_template("test.html")
+
 
 
 #------------------------------ registeration page
