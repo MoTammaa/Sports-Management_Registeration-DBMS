@@ -7,8 +7,14 @@ app.secret_key = "my secret key"
 app.config["SQLALCHEMY_DATABASE_URI"] = "mssql+pyodbc://db-porject"
 db.init_app(app)
 
-#------------------------------ home page
+#------------------------------ default route
 @app.route("/")
+def index():
+    #if not logged in
+    return render_template("login.html")
+
+#------------------------------ home page
+@app.route("/home")
 def home():
     return render_template("home.html")
 #------------------------------ login page
