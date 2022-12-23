@@ -14,10 +14,37 @@ def home():
 #------------------------------ login page
 
 
-@app.route("/login")
+
+@app.route("/login", methods=['GET','POST'])
 def login():
 
-    return render_template("login.html")
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        # Ensure username was submitted
+        if not username or ('--' in username):
+            return render_template("login.html", logMes="must provide a valid username"), 403
+
+        # Ensure password was submitted
+        elif not password or ('--' in password):
+            return render_template("login.html", logMes="must provide a valid password"), 403
+
+        # Query database for username
+        sql = f"SELECT * FROM SystemUser WHERE username = '{username}' AND password = '{password}'"
+        result = db.session.execute(sql)
+
+        # Ensure username exists and password is correct
+        if len(result) != 1 :
+            return render_template("login.html", logMes="invalid username and/or password"), 403
+
+        # Remember which user has logged in
+        #session["user_id"] = rows[0]["id"]
+
+        # Redirect user to home page
+        return redirect("/")
+    else:
+        return render_template("login.html")
 
 
 #------------------------------ registeration page
