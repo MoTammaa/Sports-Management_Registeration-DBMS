@@ -5,32 +5,15 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Register
+    Choose Role
 {% endblock %}
 
 {% block main %}
-
-<form action="/register" method="post">
-    <div class="mb-3">
-        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
-    </div>
-    <div class="mb-3">
-        <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
-    </div>
-
-    <br>
-    <label> Choose your role </label> <br>
-    <select name="role">
-        <option value="System admin">System admin</option>
-        <option value="Sports Association Manager">Sports Association Manager</option>
-        <option value="Club Representative" >Club Representative</option>
-        <option value="Stadium Manager" >Stadium Manager</option>
-        <option value="Fan" selected>Fan</option>
-    </select>
-</form>
-<br><br>
-<button class="btn btn-primary" type="submit">Register</button> <br> <br>
-
-
+<h1> Register as.... ?</h1><br><br>
+<button onclick="location.href = '/Register_System_Admin';" class="btn btn-primary" > System Admin </button><br><br>
+<button onclick="location.href = '/Register_Sports_Association_Manager';" class="btn btn-primary" > Sports Association Manager </button><br><br>
+<button onclick="location.href = '/Register_Club_Representative';" class="btn btn-primary" > Club Representative </button><br><br>
+<button onclick="location.href = '/Register_Stadium_Manager';" class="btn btn-primary" > Stadium Manager </button><br><br>
+<button onclick="location.href = '/Register_Fan';" class="btn btn-primary" > Fan </button><br><br>
 
 {% endblock %}

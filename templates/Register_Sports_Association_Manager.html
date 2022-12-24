@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+
+
+{% extends "layout.html" %}
+
+{% block title %}
+    Register Sports Assoc Manager
+{% endblock %}
+
+{% block main %}
+<h1>Sports Association Manager Registration</h1><br><br>
+<form action="/Sports_Association_Manager" method="post">
+    
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text" required><br>
+        <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password" required><br>
+        <input class="form-control mx-auto w-auto" name="Full Name" placeholder="Full Name" type="text" required>
+        <button class="btn btn-primary" type="submit">Register</button> <br> <br>
+</form>
+<br><br>
+
+
+
+
+{% endblock %}

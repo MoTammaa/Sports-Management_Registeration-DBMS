@@ -55,9 +55,25 @@ def login():
 
 #------------------------------ registeration page
 @app.route("/register")
-def registerFunction():
-    return render_template("register.html")
+def register_Function():
+        return render_template("register.html")
 
+@app.route("/Register_System_Admin")
+def Register_SystemAdmin_Function():
+    return render_template("Register_System_Admin.html")    
+
+@app.route("/Register_Sports_Association_Manager")
+def Register_SportsAssoc_Function():
+    return render_template("Register_Sports_Association_Manager.html") 
+
+@app.route("/Register_Club_Representative")
+def Register_ClubRepresentative_Function():
+    sql = "SELECT name FROM club"
+    clubs = db.session.execute(sql)
+    names = []
+    for club in clubs:
+        names.append(club.name)
+    return render_template("Register_Club_Representative.html", names=names) 
 
 
 
@@ -68,7 +84,7 @@ def SystemAdminFunction():
 
 #------------------------------Sports Association Manager page
 
-@app.route("/Sports_Association_Manager")
+@app.route("/Sports_Association_Manager",methods = ['GET'])
 def AssocManagerFunction():
     return render_template("Sports_Association_Manager.html")
 
