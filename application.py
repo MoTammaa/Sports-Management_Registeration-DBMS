@@ -87,6 +87,9 @@ def AssocManagerFunction():
 
 
 #------------------------------Fan page
+@app.route("/Fan")
+def FanFunction():
+    return render_template("Fan.html")
 
 
 

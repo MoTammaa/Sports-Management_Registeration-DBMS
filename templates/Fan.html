@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+
+
+{% extends "layout.html" %}
+
+{% block title %}
+    Your Title
+{% endblock %}
+
+{% block main %}
+
+<h1> Welcome ( fan name )! {{ fanName }} </h1> <br> 
+<hr>
+<h2> Show Available Tickets </h2> <br><br>
+<form action="/Show_available_tickts" method="post">
+	<label> Select Start Time </label>
+	<input type="datetime-local" name="start_time_forShowing"/> <br><br>
+	<input type="submit" value="Show all Matches that have available tickets starting from that time">
+</form>
+
+<hr>
+
+<h2> Purchase Ticket </h2> <br><br>
+<form action="/Purchase_Ticket" method="post">
+	<label> Write Host Club Name </label>
+	<input type="text" name="Host_name"/> <br><br>
+    <label> Write Guest Club Name </label>
+	<input type="text" name="Guest_name"/> <br><br>
+    <label> Select Match Start Time </label>
+	<input type="datetime-local" name="start_time"/> <br><br>
+	<input type="submit" value="Purchase a Ticket !">
+</form>
+<hr>
+
+{% endblock %}

@@ -13,27 +13,27 @@
 
 <hr>
 
-<h2> Add Club </h2>
+<h2> Add Club </h2> <br>
 <form action="/AddClub" method="post">
 	<label> Club Name </label>
 	<input type="text" name="Added_club_name"/> 
 	<label> Club Location </label>
 	<input type="text" name="Added_club_location"/> <br><br>
-	<input type="submit" value="Add Club">
+	<input type="submit" value="Add Club"> <br><br>
 </form>
 
 <hr>
 
-<h2>Delete Club </h2>
+<h2>Delete Club </h2> <br>
 <form action="DeleteClub" method="post">
 	<label> Club Name </label> 	
 	<input type="text" name="Deleted_club_name"/> <br><br>
-	<input type="submit" value="Delete Club">
+	<input type="submit" value="Delete Club"><br><br>
 </form>
 
 <hr>
 
-<h2>Add Stadium </h2>
+<h2>Add Stadium </h2><br>
 <form action="AddStadium" method="post">
 	<label> Stadium Name </label> 	
 	<input type="text" name="Added_stadium_name"/> 
@@ -41,26 +41,28 @@
 	<input type="text" name="Added_stadium_location"/> 
 	<label> Stadium Capacity </label> 	
 	<input type="text" name="Added_stadium_capacity"/> <br><br>
-	<input type="submit" value="Add Stadium"> 
+	<input type="submit" value="Add Stadium"> <br><br>
 </form>
 
 <hr>
 
-<h2>Delete Stadium </h2>
+<h2>Delete Stadium </h2><br>
 <form action="DeleteStadium" method="post">
 	<label> Stadium Name </label> 	
 	<input type="text" name="Deleted_stadium_name"/> <br><br>
-	<input type="submit" value="Delete Stadium"> 
+	<input type="submit" value="Delete Stadium"> <br><br>
 </form>
 
 <hr>
 
-<h2>Block Fan </h2>
+<h2>Block Fan </h2><br>
 <form action="BlockFan" method="post">
 	<label> Fan National ID </label> 	
 	<input type="text" name="Blocked_Fan_national_id"/> <br><br>
-	<input type="submit" value="Block Fan"> 
+	<input type="submit" value="Block Fan"> <br><br>
 </form>
+
+<hr>
 
 
 {% endblock %}
