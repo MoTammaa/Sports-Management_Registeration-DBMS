@@ -66,7 +66,7 @@ def clubs():
     result = db.session.execute(sql)
 
     return render_template("clubs.html", result=result)
-
+#--------------------------------------------------------------
 @app.route("/clubs/add", methods=['POST'])
 def add_club():
     name = request.form['name']
@@ -79,7 +79,7 @@ def add_club():
     flash(f"Club {name} in {location} added successfully!")
 
     return redirect(url_for('home'))
-
+#-----------------------------------------------
 @app.route("/clubs/delete", methods=['POST'])
 def delete_club():
     name = request.form['name']

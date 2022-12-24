@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+
+
+{% extends "layout.html" %}
+
+{% block title %}
+    Your Title
+{% endblock %}
+
+{% block main %}
+<h1> viewName </h1>
+<table>
+    <tr>
+        {% for header in headings %}
+        <th> {{ header }} </th>
+        {% endfor %}
+    </tr>
+    {% for row in data %}
+    <tr>
+        {% for cell in row %}
+        <td> {{ cell }} </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}
