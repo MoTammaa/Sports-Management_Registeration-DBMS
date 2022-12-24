@@ -7,17 +7,50 @@ app.secret_key = "my secret key"
 app.config["SQLALCHEMY_DATABASE_URI"] = "mssql+pyodbc://db-porject"
 db.init_app(app)
 
-#------------------------------ home page
+#------------------------------ default route
 @app.route("/")
+def index():
+    #if not logged in
+    return render_template("login.html")
+
+#------------------------------ home page
+@app.route("/home")
 def home():
     return render_template("home.html")
 #------------------------------ login page
 
 
-@app.route("/login")
+
+@app.route("/login", methods=['GET','POST'])
 def login():
 
-    return render_template("login.html")
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        # Ensure username was submitted
+        if not username or ('--' in username):
+            return render_template("login.html", logMes="must provide a valid username"), 403
+
+        # Ensure password was submitted
+        elif not password or ('--' in password):
+            return render_template("login.html", logMes="must provide a valid password"), 403
+
+        # Query database for username
+        sql = f"SELECT * FROM SystemUser WHERE username = '{username}' AND password = '{password}'"
+        result = db.session.execute(sql)
+
+        # Ensure username exists and password is correct
+        if len(result) != 1 :
+            return render_template("login.html", logMes="invalid username and/or password"), 403
+
+        # Remember which user has logged in
+        #session["user_id"] = rows[0]["id"]
+
+        # Redirect user to home page
+        return redirect("/")
+    else:
+        return render_template("login.html")
 
 
 #------------------------------ registeration page
