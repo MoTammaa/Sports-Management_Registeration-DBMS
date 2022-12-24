@@ -54,6 +54,9 @@ def login():
 
 
 #------------------------------ registeration page
+@app.route("/register")
+def registerFunction():
+    return render_template("register.html")
 
 
 

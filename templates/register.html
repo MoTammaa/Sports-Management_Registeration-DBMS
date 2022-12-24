@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+
+
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+
+<form action="/register" method="post">
+    <div class="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
+    </div>
+    <div class="mb-3">
+        <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+    </div>
+
+    <br>
+    <label> Choose your role </label> <br>
+    <select name="role">
+        <option value="System admin">System admin</option>
+        <option value="Sports Association Manager">Sports Association Manager</option>
+        <option value="Club Representative" >Club Representative</option>
+        <option value="Stadium Manager" >Stadium Manager</option>
+        <option value="Fan" selected>Fan</option>
+    </select>
+</form>
+<br><br>
+<button class="btn btn-primary" type="submit">Register</button> <br> <br>
+
+
+
+{% endblock %}
