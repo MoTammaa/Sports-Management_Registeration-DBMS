@@ -14,7 +14,11 @@
         </div>
         <button class="btn btn-primary" type="submit">Log In</button>
     </form>
+    <br>
 
+    {% if logMes %}
+        <h6 style="color: rgb(197, 0, 0);"> <span class="red">{{ logMes }}</span></h3>
+    {% endif %}
 
     <br>
     <h1 class="display-3">OR</h1> <br>

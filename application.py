@@ -39,6 +39,7 @@ def login():
         # Query database for username
         sql = f"SELECT * FROM SystemUser WHERE username = '{username}' AND password = '{password}'"
         result = db.session.execute(sql)
+        result=result.mappings().all()
 
         # Ensure username exists and password is correct
         if len(result) != 1 :
@@ -48,7 +49,8 @@ def login():
         #session["user_id"] = rows[0]["id"]
 
         # Redirect user to home page
-        return redirect("/")
+        print("login successfullllll")
+        return redirect("/home")
     else:
         return render_template("login.html")
 
