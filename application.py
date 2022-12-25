@@ -1,6 +1,7 @@
 from flask import Flask, redirect, url_for, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
 
+
 db = SQLAlchemy()
 app = Flask(__name__)
 app.secret_key = "my secret key"
@@ -55,40 +56,76 @@ def login():
         return render_template("login.html")
 
 
-#------------------------------ registeration page
+#------------------------------ registeration pages
 @app.route("/register")
-def register_Function():
+def Register_Function():
         return render_template("register.html")
 
-@app.route("/Register_System_Admin")
-def Register_SystemAdmin_Function():
-    return render_template("Register_System_Admin.html")    
+@app.route("/register_system_admin")
+def Register_System_Admin_Function():
+    return render_template("register_system_admin.html")    
 
-@app.route("/Register_Sports_Association_Manager")
+@app.route("/register_sports_association_manager")
 def Register_SportsAssoc_Function():
-    return render_template("Register_Sports_Association_Manager.html") 
+    return render_template("register_sports_association_manager.html") 
 
-@app.route("/Register_Club_Representative")
+@app.route("/register_club_representative")
 def Register_ClubRepresentative_Function():
-    sql = "SELECT name FROM club"
+    sql = """ SELECT c.club_id, c.name 
+              FROM club c LEFT OUTER JOIN ClubRepresentative rep
+              ON c.club_id = rep.club_ID
+              where rep.club_id is null             
+          """                          
     clubs = db.session.execute(sql)
-    names = []
-    for club in clubs:
-        names.append(club.name)
-    return render_template("Register_Club_Representative.html", names=names) 
+    return render_template("register_club_representative.html", clubs=clubs) 
 
+@app.route("/register_stadium_manager")
+def Register_Stadium_Manager_Function():
+    sql = """select s.name 
+             from Stadium s left outer join StadiumManager m  
+             on s.ID = m.stadium_ID  
+             where m.stadium_ID is null"""       
+    Stadiums = db.session.execute(sql)
+    available_stadiums = [] 
+    for Stadium in Stadiums:
+        available_stadiums.append(Stadium.name)
+    return render_template("register_stadium_manager.html", names=available_stadiums)     
+
+@app.route("/register_fan")
+def Register_Fan_Function():
+    return render_template("register_fan.html")         
 
 
 #------------------------------System admin page
-@app.route("/System_admin")
-def SystemAdminFunction():
-    return render_template("System_admin.html")
+@app.route("/system_admin" , methods = ['GET','POST'])
+def System_Admin_Function():
+    if(request.method == 'GET'):
+        name = request.args.get('name')
+        return render_template("system_admin.html",name = name)
+    else:  
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['Full Name']
+        sql = f"""  SELECT *    
+                    from SystemUser u
+                    where u.username = '{username} '
+                """
+        result = db.session.execute(sql)
+        if(not isEmpty(result)):
+            flash("username already taken!")
+            return redirect(url_for("Register_System_Admin_Function"))
+        else:
+            db.session.commit()  
+            return redirect(url_for("System_Admin_Function", name = name))
+        
 
 #------------------------------Sports Association Manager page
 
-@app.route("/Sports_Association_Manager",methods = ['GET'])
-def AssocManagerFunction():
-    return render_template("Sports_Association_Manager.html")
+# @app.route("/sports_association_manager",methods = ['GET','POST'])
+# def AssocManagerFunction():
+#     return redirect(url_for('system_Admin'))
+    
+
 
 
 #------------------------------Club Representative: page
@@ -110,7 +147,7 @@ def AssocManagerFunction():
 #------------------------------Fan page
 @app.route("/Fan")
 def FanFunction():
-    return render_template("Fan.html")
+    return render_template("fan.html")
 
 
 
@@ -148,3 +185,11 @@ def delete_club():
     flash(f"Club {name} deleted successfully!")
 
     return redirect(url_for('home'))
+# some helper functions
+def isEmpty(SQL_SET):
+    numOfRows = 0
+    for row in SQL_SET:
+        return False
+    return True    
+           
+    

@@ -8,13 +8,12 @@
 
 {% block main %}
 
-
-<h1> Welcome (admin name)! {{ admin_name }} </h1> <!-- admin_name is passed from regestraition page-->
+<h1> Welcome {{name}} !</h1> <!-- admin_name is passed from regestraition page-->
 
 <hr>
 
 <h2> Add Club </h2> <br>
-<form action="/AddClub" method="post">
+<form action="/add_club" method="post">
 	<label> Club Name </label>
 	<input type="text" name="Added_club_name"/> 
 	<label> Club Location </label>
@@ -25,7 +24,7 @@
 <hr>
 
 <h2>Delete Club </h2> <br>
-<form action="/DeleteClub" method="post">
+<form action="/delete_club" method="post">
 	<label> Club Name </label> 	
 	<input type="text" name="Deleted_club_name"/> <br><br>
 	<input type="submit" value="Delete Club"><br><br>
@@ -34,7 +33,7 @@
 <hr>
 
 <h2>Add Stadium </h2><br>
-<form action="/AddStadium" method="post">
+<form action="/add_stadium" method="post">
 	<label> Stadium Name </label> 	
 	<input type="text" name="Added_stadium_name"/> 
 	<label> Stadium Location </label> 	
@@ -47,7 +46,7 @@
 <hr>
 
 <h2>Delete Stadium </h2><br>
-<form action="/DeleteStadium" method="post">
+<form action="/delete_stadium" method="post">
 	<label> Stadium Name </label> 	
 	<input type="text" name="Deleted_stadium_name"/> <br><br>
 	<input type="submit" value="Delete Stadium"> <br><br>
@@ -56,7 +55,7 @@
 <hr>
 
 <h2>Block Fan </h2><br>
-<form action="/BlockFan" method="post">
+<form action="/block_fan" method="post">
 	<label> Fan National ID </label> 	
 	<input type="text" name="Blocked_Fan_national_id"/> <br><br>
 	<input type="submit" value="Block Fan"> <br><br>

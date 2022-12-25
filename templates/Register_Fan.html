@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+
+
+{% extends "layout.html" %}
+
+{% block title %}
+    Register Fan
+{% endblock %}
+
+{% block main %}
+<h1>Fan Registration</h1><br><br>
+<form action="/fan" method="post">
+    
+    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text" maxlength="20" required><br>
+    <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password" maxlength="20" required><br>
+    <input class="form-control mx-auto w-auto"  name="Full Name" placeholder="Full Name" type="text" maxlength="20" required><br>
+    <input class="form-control mx-auto w-auto"  name="National id" placeholder="National ID" type="text" maxlength="20" required><br>
+    <input class="form-control mx-auto w-auto"  name="phone number" placeholder="Phone Number" type="text" maxlength="20" required><br>
+    <label> Birth Date </label>
+    <input  class="form-control mx-auto w-auto"  name="Birth Date" type="datetime-local" required><br>
+    <input  class="form-control mx-auto w-auto"  name="Address" placeholder="Address" type="text" maxlength="20" required><br><br>
+    <button class="btn btn-primary" type="submit">Register</button> <br> <br>
+
+</form>
+<br><br>
+
+
+
+
+{% endblock %}
