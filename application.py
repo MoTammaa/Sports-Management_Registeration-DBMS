@@ -1,6 +1,8 @@
 from flask import Flask, redirect, url_for, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask import session
+
 
 
 db = SQLAlchemy()
@@ -63,123 +65,94 @@ def Register_Function():
         return render_template("register.html")
 
 
-@app.route("/register_system_admin")
+@app.route("/register_system_admin", methods = ['GET','POST'])
 def Register_System_Admin_Function():
-    return render_template("register_system_admin.html")    
+        if(request.method == 'POST'):
+            username = request.form['username']
+            password = request.form['password']
+            name = request.form['Full Name']
+            sql = f"""  SELECT *    
+                        from SystemUser u
+                        where u.username = '{username}'
+                   """
+            result = db.session.execute(sql)
+            if(not isEmpty(result)):
+                flash("username already taken!")
+                return redirect(url_for("Register_System_Admin_Function"))
+            else:           
+                flash("System Admin Registeration Succesfull !")  
+                sql2 = f"""INSERT INTO SystemUser(username,password) VALUES ('{username}','{password}')
+                           INSERT INTO SystemAdmin(username,name) VALUES ('{username}', '{name}')
+                        """
+                db.session.execute(sql2)
+                db.session.commit()        
+                return redirect(url_for("login")) 
+        else:
+            return render_template('register_system_admin.html')         
+ 
 
 
-@app.route("/register_sports_association_manager")
+@app.route("/register_sports_association_manager", methods = ['GET','POST'])
 def Register_Sports_Association_Manager_Function():
-    return render_template("register_sports_association_manager.html") 
+        if(request.method == 'POST'):                    
+            username = request.form['username']
+            password = request.form['password']
+            name = request.form['Full Name']
+            sql = f"""  SELECT *    
+                        from SystemUser u
+                        where u.username = '{username}'
+                   """
+            result = db.session.execute(sql)
+            if(not isEmpty(result)):
+                 flash("username already taken!")
+                 return redirect(url_for("Register_Sports_Association_Manager_Function"))
+            else:        
+                flash("Sports Association Manager Registeration Successful !")     
+                sql2 = f""" exec addAssociationManager '{name}', '{username}', '{password}' """                                      
+                db.session.execute(sql2)
+                db.session.commit()        
+                return redirect(url_for("login")) 
+        else:
+            return render_template("register_sports_association_manager.html")        
 
 
-@app.route("/register_club_representative")
+@app.route("/register_club_representative", methods = ['GET','POST'])
 def Register_ClubRepresentative_Function():
-    sql = """ SELECT c.club_id, c.name 
-              FROM club c LEFT OUTER JOIN ClubRepresentative rep
-              ON c.club_id = rep.club_ID
-              where rep.club_id is null             
-          """                          
-    clubs = db.session.execute(sql)
-    return render_template("register_club_representative.html", clubs=clubs) 
+    if(request.method == 'POST'):
+
+        print("lala")
+
+    else:    
+        sql = """ SELECT c.club_id, c.name 
+                    FROM club c LEFT OUTER JOIN ClubRepresentative rep
+                    ON c.club_id = rep.club_ID
+                    where rep.club_id is null             
+                """                          
+        clubs = db.session.execute(sql)
+        return render_template("register_club_representative.html", clubs=clubs) 
 
 
-@app.route("/register_stadium_manager")
+@app.route("/register_stadium_manager", methods = ['GET','POST'])
 def Register_Stadium_Manager_Function():
-    sql = """select s.name 
-             from Stadium s left outer join StadiumManager m  
-             on s.ID = m.stadium_ID  
-             where m.stadium_ID is null"""       
-    Stadiums = db.session.execute(sql)
-    available_stadiums = [] 
-    for Stadium in Stadiums:
-        available_stadiums.append(Stadium.name)
-    return render_template("register_stadium_manager.html", names=available_stadiums)     
+    if(request.method == 'POST'):
+
+       print("lala")
+
+    else:    
+        sql = """select s.name 
+                from Stadium s left outer join StadiumManager m  
+                on s.ID = m.stadium_ID  
+                where m.stadium_ID is null"""       
+        Stadiums = db.session.execute(sql)
+        available_stadiums = [] 
+        for Stadium in Stadiums:
+            available_stadiums.append(Stadium.name)
+        return render_template("register_stadium_manager.html", names=available_stadiums)     
 
 
-@app.route("/register_fan")
+@app.route("/register_fan", methods = ['GET','POST'])
 def Register_Fan_Function():
-    return render_template("register_fan.html")         
-
-
-#------------------------------System admin page
-@app.route("/system_admin" , methods = ['GET','POST'])
-def System_Admin_Function():
-    if(request.method == 'GET'):
-        name = request.args.get('name')
-        return render_template("system_admin.html",name = name)
-    else:  
-        username = request.form['username']
-        password = request.form['password']
-        name = request.form['Full Name']
-        sql = f"""  SELECT *    
-                    from SystemUser u
-                    where u.username = '{username}'
-                """
-        result = db.session.execute(sql)
-        if(not isEmpty(result)):
-            flash("username already taken!")
-            return redirect(url_for("Register_System_Admin_Function"))
-        else:             
-            sql2 = f"""INSERT INTO SystemUser(username,password) VALUES ('{username}','{password}')
-                       INSERT INTO SystemAdmin(username,name) VALUES ('{username}', '{name}')
-                    """
-            db.session.execute(sql2)
-            db.session.commit()        
-            return redirect(url_for("System_Admin_Function", name = name))
-        
-
-#------------------------------Sports Association Manager page
-
-@app.route("/sports_association_manager",methods = ['GET','POST'])
-def Sports_Association_Manager_Function():
-    if(request.method == 'GET'):
-        name = request.args.get('name')
-        return render_template("sports_association_manager.html",name = name)
-    else:  
-        username = request.form['username']
-        password = request.form['password']
-        name = request.form['Full Name']
-        sql = f"""  SELECT *    
-                    from SystemUser u
-                    where u.username = '{username}'
-               """
-        result = db.session.execute(sql)
-        if(not isEmpty(result)):
-            flash("username already taken!")
-            return redirect(url_for("Register_Sports_Association_Manager_Function"))
-        else:             
-            sql2 = f""" exec addAssociationManager '{name}', '{username}', '{password}' """                                      
-            db.session.execute(sql2)
-            db.session.commit()        
-            return redirect(url_for("Sports_Association_Manager_Function", name = name))
-    
-
-
-
-#------------------------------Club Representative: page
-
-
-
-
-
-
-
-#------------------------------Stadium Manager page
-
-
-
-
-
-
-
-#------------------------------Fan page
-@app.route("/fan" , methods = ['GET','POST'])
-def Fan_Function():
-    if(request.method == 'GET'):
-        name = request.args.get('name')
-        return render_template("fan.html",name = name)
-    else:  
+    if(request.method == 'POST'):
         username = request.form['username']
         password = request.form['password']
         name = request.form['Full Name']
@@ -204,8 +177,46 @@ def Fan_Function():
     
             sql2 = f""" exec addFan '{name}', '{username}', '{password}', '{national_id}', '{stage3}', '{address}', {phone_num} """                  
             db.session.execute(sql2)
-            db.session.commit()        
-            return redirect(url_for("Fan_Function", name = name))
+            db.session.commit()    
+            flash("Fan Registeration Successfull !")    
+            return redirect(url_for("login"))
+    else:    
+        return render_template("register_fan.html")         
+
+
+#------------------------------System admin page
+@app.route("/system_admin")
+def System_Admin_Function():
+    return render_template("system_admin.html")
+#------------------------------Sports Association Manager page
+
+@app.route("/sports_association_manager")
+def Sports_Association_Manager_Function():
+    return render_template("sports_association_manager.html")
+    
+
+
+
+#------------------------------Club Representative: page
+
+
+
+
+
+
+
+#------------------------------Stadium Manager page
+
+
+
+
+
+
+
+#------------------------------Fan page
+@app.route("/fan")
+def Fan_Function():
+    return render_template("fan.html")
 
 #----------------------------------------------------------------------------------examples 
 @app.route("/clubs")
