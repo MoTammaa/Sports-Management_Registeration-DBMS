@@ -5,6 +5,32 @@ from flask_session import Session
 from functools import wraps
 
 
+#                          {username,password}
+#     _______________________(-SystemUser-) _______________________________________
+#    /                 |               |                      |                    \
+#   /                  |               |                      |                     \
+# (-Fan-)       (-SystemAdmin-)   (-StadiumManager-)   (-ClubRepresentative-)   (-SportsAssociationManager-)
+#{national_id,      {ID,name          {ID,name            {ID,name,username         {ID,name,username}
+#name,             ,username}         ,username           ,club_id}
+#birth_date,                          ,stadium_id}
+#address,
+#status,
+#phone_no,
+#username}
+#               (-Stadium-)                  (-Club-)--{club_id,name,location}
+#     {ID,name,location,capacity,status}
+#
+#                         (-Match-)------{match_ID,start_time,end_time,host_club_ID,guest_club_ID,stadium_ID}
+# 
+#{ID,status,match_ID}--(-Ticket-)     (-HostRequest-)--{ID,representative_ID,manager_ID,match_ID,status}
+#
+#			    (-TicketBuyingTransactions-)
+#              {fan_national_ID,ticket_ID}
+#
+#
+#
+
+
 
 
 db = SQLAlchemy()
@@ -74,9 +100,24 @@ def login():
         if len(result) != 1 :
             return render_template("login.html", logMes="invalid username and/or password"), 403
 
+        #find the type of the user
+        if len(db.session.execute(f"SELECT * FROM Fan WHERE username = '{username}'").mappings().all()) == 1:
+            type = 'Fan'
+        elif len(db.session.execute(f"SELECT * FROM SystemAdmin WHERE username = '{username}'").mappings().all()) == 1:
+            type = 'System Admin'
+        elif len(db.session.execute(f"SELECT * FROM ClubRepresentative WHERE username = '{username}'").mappings().all()) == 1:
+            type = 'Club Representative'
+        elif len(db.session.execute(f"SELECT * FROM SportsAssociationManager WHERE username = '{username}'").mappings().all()) == 1:
+            type = 'Sports Association Manager'
+        elif len(db.session.execute(f"SELECT * FROM StadiumManager WHERE username = '{username}'").mappings().all()) == 1:
+            type = 'Stadium Manager'
+        else:
+            type = "undefined"
+
         # Remember which user has logged in
         session["username"] = username
-
+        session["user_type"] = type
+        
         # Redirect user to home page
         print("login successfullllll")
         return redirect("/home")
