@@ -17,7 +17,7 @@
     <input class="form-control mx-auto w-auto"  name="Full Name" placeholder="Full Name" type="text" maxlength="20" required><br>
 
     <label>Choose a Stadium to Manage </label>
-    <select name="Managed Stadium" >
+    <select name="Managed Stadium" required >
       {% for name in names %}
         <option value="{{name}}">{{name}}</option>
       {% endfor %}
