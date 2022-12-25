@@ -1,7 +1,9 @@
-from flask import Flask, redirect, url_for, render_template, request, flash
+from flask import Flask, redirect, url_for, render_template, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from flask import session
+from flask_session import Session
+from functools import wraps
+
 
 
 
@@ -11,16 +13,39 @@ app.secret_key = "my secret key"
 app.config["SQLALCHEMY_DATABASE_URI"] = "mssql+pyodbc://db-porject"
 db.init_app(app)
 
+# Configure session to use filesystem (instead of signed cookies)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+
+
 #------------------------------ default route
 @app.route("/")
 def index():
     #if not logged in
-    return render_template("login.html")
+    return redirect("/login")
+
+#------------------------------ login requirement decorator
+
+def login_required(test):
+    @wraps(test)
+    def wrap(*args, **kwargs):
+        if 'username' in session:
+            return test(*args, **kwargs)
+        else:
+            flash("You need to login first.")
+            return redirect('login')
+    return wrap
 
 #------------------------------ home page
 @app.route("/home")
+@login_required
 def home():
     return render_template("home.html")
+
+
+    
 #------------------------------ login page
 
 
@@ -50,13 +75,26 @@ def login():
             return render_template("login.html", logMes="invalid username and/or password"), 403
 
         # Remember which user has logged in
-        #session["user_id"] = rows[0]["id"]
+        session["username"] = username
 
         # Redirect user to home page
         print("login successfullllll")
         return redirect("/home")
     else:
         return render_template("login.html")
+
+#----------------------------- logout request
+
+@app.route("/logout")
+@login_required
+def logout():
+    """Log user out"""
+    print(session["username"])
+    # Forget any username
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
 
 
 #------------------------------ registeration pages
@@ -186,11 +224,13 @@ def Register_Fan_Function():
 
 #------------------------------System admin page
 @app.route("/system_admin")
+@login_required
 def System_Admin_Function():
     return render_template("system_admin.html")
 #------------------------------Sports Association Manager page
 
 @app.route("/sports_association_manager")
+@login_required
 def Sports_Association_Manager_Function():
     return render_template("sports_association_manager.html")
     
@@ -215,11 +255,13 @@ def Sports_Association_Manager_Function():
 
 #------------------------------Fan page
 @app.route("/fan")
+@login_required
 def Fan_Function():
     return render_template("fan.html")
 
 #----------------------------------------------------------------------------------examples 
 @app.route("/clubs")
+@login_required
 def clubs():
     sql = "SELECT * FROM club"
     result = db.session.execute(sql)
@@ -227,6 +269,7 @@ def clubs():
     return render_template("clubs.html", result=result)
 #--------------------------------------------------------------
 @app.route("/clubs/add", methods=['POST'])
+@login_required
 def add_club():
     name = request.form['name']
     location = request.form['location']
@@ -240,6 +283,7 @@ def add_club():
     return redirect(url_for('home'))
 #-----------------------------------------------
 @app.route("/clubs/delete", methods=['POST'])
+@login_required
 def delete_club():
     name = request.form['name']
 
