@@ -1,5 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 
 db = SQLAlchemy()
@@ -61,13 +62,16 @@ def login():
 def Register_Function():
         return render_template("register.html")
 
+
 @app.route("/register_system_admin")
 def Register_System_Admin_Function():
     return render_template("register_system_admin.html")    
 
+
 @app.route("/register_sports_association_manager")
-def Register_SportsAssoc_Function():
+def Register_Sports_Association_Manager_Function():
     return render_template("register_sports_association_manager.html") 
+
 
 @app.route("/register_club_representative")
 def Register_ClubRepresentative_Function():
@@ -78,6 +82,7 @@ def Register_ClubRepresentative_Function():
           """                          
     clubs = db.session.execute(sql)
     return render_template("register_club_representative.html", clubs=clubs) 
+
 
 @app.route("/register_stadium_manager")
 def Register_Stadium_Manager_Function():
@@ -90,6 +95,7 @@ def Register_Stadium_Manager_Function():
     for Stadium in Stadiums:
         available_stadiums.append(Stadium.name)
     return render_template("register_stadium_manager.html", names=available_stadiums)     
+
 
 @app.route("/register_fan")
 def Register_Fan_Function():
@@ -108,22 +114,45 @@ def System_Admin_Function():
         name = request.form['Full Name']
         sql = f"""  SELECT *    
                     from SystemUser u
-                    where u.username = '{username} '
+                    where u.username = '{username}'
                 """
         result = db.session.execute(sql)
         if(not isEmpty(result)):
             flash("username already taken!")
             return redirect(url_for("Register_System_Admin_Function"))
-        else:
-            db.session.commit()  
+        else:             
+            sql2 = f"""INSERT INTO SystemUser(username,password) VALUES ('{username}','{password}')
+                       INSERT INTO SystemAdmin(username,name) VALUES ('{username}', '{name}')
+                    """
+            db.session.execute(sql2)
+            db.session.commit()        
             return redirect(url_for("System_Admin_Function", name = name))
         
 
 #------------------------------Sports Association Manager page
 
-# @app.route("/sports_association_manager",methods = ['GET','POST'])
-# def AssocManagerFunction():
-#     return redirect(url_for('system_Admin'))
+@app.route("/sports_association_manager",methods = ['GET','POST'])
+def Sports_Association_Manager_Function():
+    if(request.method == 'GET'):
+        name = request.args.get('name')
+        return render_template("sports_association_manager.html",name = name)
+    else:  
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['Full Name']
+        sql = f"""  SELECT *    
+                    from SystemUser u
+                    where u.username = '{username}'
+               """
+        result = db.session.execute(sql)
+        if(not isEmpty(result)):
+            flash("username already taken!")
+            return redirect(url_for("Register_Sports_Association_Manager_Function"))
+        else:             
+            sql2 = f""" exec addAssociationManager '{name}', '{username}', '{password}' """                                      
+            db.session.execute(sql2)
+            db.session.commit()        
+            return redirect(url_for("Sports_Association_Manager_Function", name = name))
     
 
 
@@ -145,15 +174,40 @@ def System_Admin_Function():
 
 
 #------------------------------Fan page
-@app.route("/Fan")
-def FanFunction():
-    return render_template("fan.html")
+@app.route("/fan" , methods = ['GET','POST'])
+def Fan_Function():
+    if(request.method == 'GET'):
+        name = request.args.get('name')
+        return render_template("fan.html",name = name)
+    else:  
+        username = request.form['username']
+        password = request.form['password']
+        name = request.form['Full Name']
+        national_id = request.form['National id']
+        phone_num = request.form['phone number']
+        birth_date = request.form['Birth Date'] 
+        address = request.form['Address']
 
+        sql = f"""  SELECT *    
+                    from SystemUser u
+                    where u.username = '{username}'
+               """
+        result = db.session.execute(sql)
+        if(not isEmpty(result)):
+            flash("username already taken!")
+            return redirect(url_for("Register_Fan_Function"))
+        else:
+            # changing time format taken from html to be compatible with python and sql           
+            stage1 = birth_date.replace('T', ' ')                   
+            stage2 = datetime.strptime(stage1, '%Y-%m-%d %H:%M')       
+            stage3 = stage2.strftime("%Y-%m-%d %H:%M:%S")
+    
+            sql2 = f""" exec addFan '{name}', '{username}', '{password}', '{national_id}', '{stage3}', '{address}', {phone_num} """                  
+            db.session.execute(sql2)
+            db.session.commit()        
+            return redirect(url_for("Fan_Function", name = name))
 
-
-
-
-#------------------------------examples 
+#----------------------------------------------------------------------------------examples 
 @app.route("/clubs")
 def clubs():
     sql = "SELECT * FROM club"
