@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Club Representative
+{% endblock %}
+
+{% block main %}
+    <h1 class="display-5">Welcome {{session['username']}},</h1>
+    <p><em>Here is your summary for the day...</em></p>
+    <br>
+    {%if club%}
+        <div class="position-relative top-0 start-0">
+        <figure>
+            <blockquote class="blockquote">
+            <p>{{club[0].name}}</p>
+            </blockquote>
+            <figcaption class="blockquote-footer">
+            id: {{club[0].club_id}}, & location: <cite title="Source Title">{{club[0].location}}</cite>
+            </figcaption>
+        </figure>
+        </div>
+    {% endif %}
+
+    <br>
+    <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Host</th>
+            <th scope="col">Guest</th>
+            <th scope="col">Start Date & Time</th>
+            <th scope="col">End Date & Time</th>
+            <th scope="col">Stadium</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for m in matches %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{m.host_club}}</td>
+                    <td>{{m.guest_club}}</td>
+                    <td>{{m.start_time}}</td>
+                    <td>{{m.end_time}}</td>
+                    {%if m.stadium%}
+                        <td>{{m.stadium}}</td>
+                    {%else%}
+                        <td>__</td>
+                    {%endif%}
+                </tr>
+            {%endfor%}
+        </tbody>
+      </table>
+
+
+{% endblock %}

@@ -227,6 +227,7 @@ CREATE FUNCTION upcomingMatchesOfClub(@club_name VARCHAR(20))
 RETURNS @upcomingMatches TABLE(host_club VARCHAR(20),
 						guest_club VARCHAR(20),
 						start_time DATETIME,
+						end_time DATETIME,
 						stadium VARCHAR(20)
 						)
 AS
@@ -238,7 +239,7 @@ BEGIN
 	INSERT INTO @upcomingMatches
 		SELECT dbo.getName(M.host_club_ID) AS Host 
 			 , dbo.getName(M.guest_club_ID) AS Guest
-			 , M.start_time, dbo.getStadiumName(M.stadium_ID) AS Stadium
+			 , M.start_time,M.end_time, dbo.getStadiumName(M.stadium_ID) AS Stadium
 		FROM Match M
 			WHERE M.start_time >= CURRENT_TIMESTAMP
 				AND (M.host_club_ID = @cid OR M.guest_club_ID = @cid)

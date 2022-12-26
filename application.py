@@ -104,13 +104,13 @@ def login():
         if len(db.session.execute(f"SELECT * FROM Fan WHERE username = '{username}'").mappings().all()) == 1:
             type = 'Fan'
         elif len(db.session.execute(f"SELECT * FROM SystemAdmin WHERE username = '{username}'").mappings().all()) == 1:
-            type = 'System Admin'
+            type = 'System_Admin'
         elif len(db.session.execute(f"SELECT * FROM ClubRepresentative WHERE username = '{username}'").mappings().all()) == 1:
-            type = 'Club Representative'
+            type = 'Club_Representative'
         elif len(db.session.execute(f"SELECT * FROM SportsAssociationManager WHERE username = '{username}'").mappings().all()) == 1:
-            type = 'Sports Association Manager'
+            type = 'Sports_Association_Manager'
         elif len(db.session.execute(f"SELECT * FROM StadiumManager WHERE username = '{username}'").mappings().all()) == 1:
-            type = 'Stadium Manager'
+            type = 'Stadium_Manager'
         else:
             type = "undefined"
 
@@ -423,7 +423,28 @@ def Delete_Match_Function():
 
 #------------------------------Club Representative: page
 
+@app.route('/Club_Representative',methods=['GET', 'POST'])
+def CRep():
+    if session['user_type'] != 'Club_Representative':
+        return redirect('/home')
 
+    if request.method == 'GET':
+        sql = f"SELECT * FROM Club WHERE club_id = (SELECT club_id FROM ClubRepresentative WHERE username = '{session['username']}')"                  
+        club = db.session.execute(sql).mappings().all()
+
+        sql = f"SELECT * FROM dbo.upcomingMatchesOfClub('{club[0].name}')"                
+        matches = db.session.execute(sql).mappings().all()
+
+        return render_template("Club_Representative.html", club=club, matches=matches)
+
+    else:
+        if 'datee' in request.form:
+            date = request.form['datee']
+            sql = f"SELECT name,location,capacity FROM Stadium WHERE status = 1 AND start_time >= '{date}')"                  
+            stadiums = db.session.execute(sql).mappings().all()
+            return render_template("Club_Representative.html", stadiums=stadiums)
+            
+        
 
 
 
