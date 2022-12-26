@@ -15,9 +15,9 @@
 <h2> Add Club </h2> <br>
 <form action="/add_club" method="post">
 	<label> Club Name </label>
-	<input type="text" name="Added_club_name"/> 
+	<input type="text" name="Added_club_name" maxlength="20" required/> 
 	<label> Club Location </label>
-	<input type="text" name="Added_club_location"/> <br><br>
+	<input type="text" name="Added_club_location" maxlength="20" required/> <br><br>
 	<input type="submit" value="Add Club"> <br><br>
 </form>
 
@@ -25,8 +25,12 @@
 
 <h2>Delete Club </h2> <br>
 <form action="/delete_club" method="post">
-	<label> Club Name </label> 	
-	<input type="text" name="Deleted_club_name"/> <br><br>
+	<label> Choose a Club to Delete </label> 	
+	<select name="deleted club" required >
+		{% for name in club_names %}
+		  <option value= '{{name.name}}'>{{name.name}}</option>
+		{% endfor %}
+	  </select><br><br>
 	<input type="submit" value="Delete Club"><br><br>
 </form>
 
@@ -35,11 +39,11 @@
 <h2>Add Stadium </h2><br>
 <form action="/add_stadium" method="post">
 	<label> Stadium Name </label> 	
-	<input type="text" name="Added_stadium_name"/> 
+	<input type="text" name="Added_stadium_name" maxlength="20" required/> 
 	<label> Stadium Location </label> 	
-	<input type="text" name="Added_stadium_location"/> 
+	<input type="text" name="Added_stadium_location" maxlength="20" required/> 
 	<label> Stadium Capacity </label> 	
-	<input type="text" name="Added_stadium_capacity"/> <br><br>
+	<input type="number" name="Added_stadium_capacity" min = "0" max = "2147483647" required/> <br><br>
 	<input type="submit" value="Add Stadium"> <br><br>
 </form>
 
@@ -47,8 +51,12 @@
 
 <h2>Delete Stadium </h2><br>
 <form action="/delete_stadium" method="post">
-	<label> Stadium Name </label> 	
-	<input type="text" name="Deleted_stadium_name"/> <br><br>
+	<label> Choose a Stadium To Delete </label> 	
+	<select name="deleted Stadium" required >
+		{% for name in stadium_names %}
+		  <option value='{{name.name}}'>{{name.name}}</option>
+		{% endfor %}
+	  </select><br><br>
 	<input type="submit" value="Delete Stadium"> <br><br>
 </form>
 
@@ -57,11 +65,14 @@
 <h2>Block Fan </h2><br>
 <form action="/block_fan" method="post">
 	<label> Fan National ID </label> 	
-	<input type="text" name="Blocked_Fan_national_id"/> <br><br>
+	<input type="text" name="Blocked_Fan_national_id" maxlength="20" required> <br><br>
 	<input type="submit" value="Block Fan"> <br><br>
 </form>
 
 <hr>
+
+
+
 
 
 {% endblock %}

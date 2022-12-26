@@ -16,14 +16,28 @@
 
 <h2> Add Match </h2> <br><br>
 <form action="/add_match" method="post">
-	<label> Host Name </label>
-	<input type="text" name="New_Match_Host_club_name"/> <br><br>
-    <label> Guest Name </label>
-	<input type="text" name="New_Match__club_name"/> <br><br>
+	<label> Choose a Club To Host </label>
+	<select name="added host" required >
+		{% for name in club_names1 %}
+		  <option value='{{name.club_id}}'>{{name.name}}</option>
+		{% endfor %}
+	  </select><br><br>
+    <label> Choose a Club To Guest </label>
+	<select name="added Guest" required >
+		{% for name in club_names2 %}
+		  <option value='{{name.club_id}}'>{{name.name}}</option>
+		{% endfor %}
+	  </select><br><br>
+	<label> Stadium </label> 
+	<select name="stadium" required >
+		{% for name in stadiums %}
+		  <option value='{{name.ID}}'>{{name.name}}</option>
+		{% endfor %}
+	</select><br><br>
 	<label> Start Time </label>
-	<input type="datetime-local" name="New_Match_Start_Time"/> <br><br>
+	<input onchange="validateDate()" id= "start_time" type="datetime-local" name="New_Match_Start_Time" required/> <br><br>
     <label> End Time </label>
-	<input type="datetime-local" name="New_Match_End_Time"/> <br><br>
+	<input onchange="validateDate()" id= "end_time" type="datetime-local" name="New_Match_End_Time" required /> <br><br>
 	<input type="submit" value="Add Match">
 </form>
 
@@ -32,13 +46,21 @@
 <<h2> Delete Match </h2> <br><br>
 <form action="/delete_match" method="post">
 	<label> Host Name </label>
-	<input type="text" name="Deleted_Match_Host_club_name"/> <br><br>
+	<select name="deleted host" required >
+		{% for name in club_names3 %}
+		  <option value='{{name.name}}'>{{name.name}}</option>
+		{% endfor %}
+	  </select><br><br>
     <label> Guest Name </label>
-	<input type="text" name="Deleted_Match_Guest_club_name"/> <br><br>
+	<select name="deleted guest" required >
+		{% for name in club_names4 %}
+		  <option value='{{name.name}}'>{{name.name}}</option>
+		{% endfor %}
+	  </select><br><br>
 	<label> Start Time </label>
-	<input type="datetime-local" name="Deleted_Match_Start_Time"/> <br><br>
+	<input  type="datetime-local" name="Deleted_Match_Start_Time" required/> <br><br>
     <label> End Time </label>
-	<input type="datetime-local" name="Deleted_Match_Host_End_Time"/> <br><br>
+	<input type="datetime-local" name="Deleted_Match_End_Time"/ required> <br><br>
 	<input type="submit" value="Delete Match">
 </form>
 
@@ -53,6 +75,28 @@
 
 <hr>
 
+<script>
+	function validateDate(){
+	  var start_time = new Date(document.getElementById("start_time").value);
+	  var end_time = new Date(document.getElementById("end_time").value);
+	  var current_date = new Date();
+
+	  if(current_date - start_time > 59999){
+		 alert("lets go to the past and play the match , BALABIZO ! :)");
+		 document.getElementById("start_time").value = null;
+	  }
+	  else if(end_time < start_time){
+		alert("Such a cool match that will end before it starts ! :)");
+		document.getElementById("end_time").value = null;
+
+	  }
+	  else if(end_time - start_time <= 59999){
+		alert("you made Physics Sad , running and movement with no time ? )");
+		document.getElementById("end_time").value = null;
+
+	  }
+	}
+</script>
 
 
 

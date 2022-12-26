@@ -138,11 +138,10 @@ def logout():
     return redirect("/")
 
 
-#------------------------------ registeration pages
+#---------------------------------------------------------------------------------------------------registeration pages
 @app.route("/register")
 def Register_Function():
         return render_template("register.html")
-
 
 @app.route("/register_system_admin", methods = ['GET','POST'])
 def Register_System_Admin_Function():
@@ -169,8 +168,6 @@ def Register_System_Admin_Function():
         else:
             return render_template('register_system_admin.html')         
  
-
-
 @app.route("/register_sports_association_manager", methods = ['GET','POST'])
 def Register_Sports_Association_Manager_Function():
         if(request.method == 'POST'):                    
@@ -194,12 +191,28 @@ def Register_Sports_Association_Manager_Function():
         else:
             return render_template("register_sports_association_manager.html")        
 
-
 @app.route("/register_club_representative", methods = ['GET','POST'])
 def Register_ClubRepresentative_Function():
     if(request.method == 'POST'):
 
-        print("lala")
+            username = request.form['username']
+            password = request.form['password']
+            name = request.form['Full Name']
+            represented_club = request.form['Represented Club']
+            sql = f"""  SELECT *    
+                        from SystemUser u
+                        where u.username = '{username}'
+                   """
+            result = db.session.execute(sql)
+            if(not isEmpty(result)):
+                 flash("username already taken!")
+                 return redirect(url_for("Register_ClubRepresentative_Function"))
+            else:        
+                flash("Club Representative Registeration Successful !")     
+                sql2 = f""" exec addRepresentative '{name}', '{represented_club}', '{username}', '{password}' """                                      
+                db.session.execute(sql2)
+                db.session.commit()        
+                return redirect(url_for("login")) 
 
     else:    
         sql = """ SELECT c.club_id, c.name 
@@ -210,12 +223,28 @@ def Register_ClubRepresentative_Function():
         clubs = db.session.execute(sql)
         return render_template("register_club_representative.html", clubs=clubs) 
 
-
 @app.route("/register_stadium_manager", methods = ['GET','POST'])
 def Register_Stadium_Manager_Function():
     if(request.method == 'POST'):
+            username = request.form['username']
+            password = request.form['password']
+            name = request.form['Full Name']
+            mangaed_stadium = request.form['Managed Stadium']
+            sql = f"""  SELECT *    
+                        from SystemUser u
+                        where u.username = '{username}'
+                   """
+            result = db.session.execute(sql)
+            if(not isEmpty(result)):
+                 flash("username already taken!")
+                 return redirect(url_for("Register_Stadium_Manager_Function"))
+            else:        
+                flash("Club Representative Registeration Successful !")     
+                sql2 = f""" exec addStadiumManager '{name}', '{mangaed_stadium}', '{username}', '{password}' """                                      
+                db.session.execute(sql2)
+                db.session.commit()        
+                return redirect(url_for("login")) 
 
-       print("lala")
 
     else:    
         sql = """select s.name 
@@ -227,7 +256,6 @@ def Register_Stadium_Manager_Function():
         for Stadium in Stadiums:
             available_stadiums.append(Stadium.name)
         return render_template("register_stadium_manager.html", names=available_stadiums)     
-
 
 @app.route("/register_fan", methods = ['GET','POST'])
 def Register_Fan_Function():
@@ -250,11 +278,8 @@ def Register_Fan_Function():
             return redirect(url_for("Register_Fan_Function"))
         else:
             # changing time format taken from html to be compatible with python and sql           
-            stage1 = birth_date.replace('T', ' ')                   
-            stage2 = datetime.strptime(stage1, '%Y-%m-%d %H:%M')       
-            stage3 = stage2.strftime("%Y-%m-%d %H:%M:%S")
-    
-            sql2 = f""" exec addFan '{name}', '{username}', '{password}', '{national_id}', '{stage3}', '{address}', {phone_num} """                  
+            time_formatted = timeForSQL_without_seconds(birth_date)   
+            sql2 = f""" exec addFan '{name}', '{username}', '{password}', '{national_id}', '{time_formatted}', '{address}', {phone_num} """                  
             db.session.execute(sql2)
             db.session.commit()    
             flash("Fan Registeration Successfull !")    
@@ -263,19 +288,137 @@ def Register_Fan_Function():
         return render_template("register_fan.html")         
 
 
-#------------------------------System admin page
-@app.route("/system_admin")
-@login_required
+#---------------------------------------------------------------------------------------------------------System admin pages
+@app.route("/system_admin",methods = ['GET','POST'])
 def System_Admin_Function():
-    return render_template("system_admin.html")
-#------------------------------Sports Association Manager page
+    sql1 = """ SELECT name FROM club  """                                                                   
+    sql2 = """ SELECT name FROM Stadium  """     
+    club_names = db.session.execute(sql1)
+    stadium_names = db.session.execute(sql2)
+    return render_template("system_admin.html", club_names=club_names , stadium_names = stadium_names) 
+
+@app.route("/add_club",methods = ['GET','POST'])
+def Add_Club_Function():
+    if(request.method == 'POST'):
+        club_name = request.form['Added_club_name']
+        club_location = request.form['Added_club_location']
+        sql = f"""exec addClub '{club_name}', '{club_location}' """
+        db.session.execute(sql)
+        db.session.commit()
+        flash(f"Club {club_name} in {club_location} Added Successfully !")      
+    return redirect(url_for("System_Admin_Function"))    
+
+@app.route("/delete_club",methods = ['GET','POST'])
+def Delete_Club_Function():
+    if(request.method == 'POST'):
+        club_name = request.form['deleted club']
+        sql = f"""exec deleteClub '{club_name}' """
+        db.session.execute(sql)
+        db.session.commit()
+        flash(f"Club {club_name} Deleted Successfully !")      
+    return redirect(url_for("System_Admin_Function"))    
+
+@app.route("/add_stadium",methods = ['GET','POST'])
+def Add_Stadium_Function():
+    if(request.method == 'POST'):
+        Stadium_name = request.form['Added_stadium_name']
+        Stadium_location = request.form['Added_stadium_location']
+        Stadium_capacity = request.form['Added_stadium_capacity']
+        sql = f"""exec addStadium '{Stadium_name}', '{Stadium_location}', '{Stadium_capacity}' """
+        db.session.execute(sql)
+        db.session.commit()
+        flash(f"Stadium {Stadium_name} in {Stadium_location} with capacity {Stadium_capacity} Added Successfully !")      
+    return redirect(url_for("System_Admin_Function"))  
+
+@app.route("/delete_stadium",methods = ['GET','POST'])
+def Delete_Stadium_Function():
+    if(request.method == 'POST'):
+        stadium_name = request.form['deleted Stadium']
+        sql = f"""exec deleteStadium '{stadium_name}' """
+        db.session.execute(sql)
+        db.session.commit()
+        flash(f"Stadium {stadium_name} Deleted Successfully !")      
+    return redirect(url_for("System_Admin_Function"))      
+
+@app.route("/block_fan",methods = ['GET','POST'])
+def Block_Fan_Function():
+    if(request.method == 'POST'):
+        fan_national_ID = request.form['Blocked_Fan_national_id']
+        sql1 = f""" select * from Fan f  where f.national_id = '{fan_national_ID}' """
+        records = db.session.execute(sql1)
+        if(isEmpty(records)):
+            flash("There is no Fan with that National_ID")
+            return redirect(url_for("Block_Fan_Function"))
+        else:                     
+            sql2 = f"""exec blockFan '{fan_national_ID}' """
+            db.session.execute(sql2)
+            db.session.commit()
+            flash(f"Fan with National_ID {fan_national_ID} Blocked Successfully !")      
+    return redirect(url_for("System_Admin_Function"))  
+
+#--------------------------------------------------------------------------------------------------Sports Association Manager pages
 
 @app.route("/sports_association_manager")
-@login_required
 def Sports_Association_Manager_Function():
-    return render_template("sports_association_manager.html")
+    sql1 = """ SELECT * FROM club  """
+    sql2 = """ SELECT * FROM Stadium s""" 
+    club_names1 = db.session.execute(sql1)
+    club_names2 = db.session.execute(sql1)
+    club_names3 = db.session.execute(sql1)
+    club_names4 = db.session.execute(sql1)   
+    stadiums = db.session.execute(sql2)
+    return render_template("sports_association_manager.html", club_names1 = club_names1,club_names2 = club_names2,club_names3 = club_names3,club_names4 = club_names4,stadiums = stadiums)
     
+@app.route("/add_match",methods = ['GET','POST'])
+def Add_Match_Function():
+    if(request.method == 'POST'):
+        host_id = request.form['added host']
+        guest_id = request.form['added Guest']
+        stadium_id =  request.form['stadium']
+        start_time = timeForSQL_with_seconds(request.form['New_Match_Start_Time'])       
+        end_time = timeForSQL_with_seconds(request.form['New_Match_End_Time'])        
+        if(host_id == guest_id):
+            flash(f"in our world, a Club can't play against itself ! :) ")
+            return redirect(url_for("Add_Match_Function")) 
+        else:
+            sql = f""" INSERT INTO Match(host_club_ID , guest_club_ID , stadium_ID , start_time , end_time) VALUES
+                    ('{host_id}', '{guest_id}', '{stadium_id}', '{start_time}', '{end_time}')
 
+                    """
+            db.session.execute(sql)
+            db.session.commit()
+            flash("Match Added Successfully !")     
+            return redirect(url_for("Add_Match_Function"))   
+    else:
+        return redirect(url_for("Sports_Association_Manager_Function"))
+  
+@app.route("/delete_match",methods = ['GET','POST'])
+def Delete_Match_Function():
+    if(request.method == 'POST'):
+        host_name = request.form['deleted host']
+        guest_name = request.form['deleted guest']
+        start_time = timeForSQL_with_seconds(request.form['Deleted_Match_Start_Time'])       
+        end_time = timeForSQL_with_seconds(request.form['Deleted_Match_End_Time']) 
+        sql1 =     f""" select * 
+                        from Match m , Club c1 , Club c2
+                        where m.host_club_ID = c1.club_id 
+                        and m.guest_club_ID = c2.club_id
+                        and m.start_time = '{start_time}'
+	                    and m.end_time = '{end_time}'
+                    """   
+        result = db.session.execute(sql1)
+        if(isEmpty(result)):            
+            flash("There is No Match With Given Information !")
+            return redirect(url_for("Delete_Match_Function"))
+        else:
+            sql2 = f""" exec deleteMatch '{host_name}', '{guest_name}' """                  
+            db.session.execute(sql2)
+            db.session.commit()
+            flash("Match Deleted Successfully !")     
+            return redirect(url_for("Delete_Match_Function"))   
+    else:
+        return redirect(url_for("Sports_Association_Manager_Function"))
+      
 
 
 #------------------------------Club Representative: page
@@ -294,15 +437,59 @@ def Sports_Association_Manager_Function():
 
 
 
-#------------------------------Fan page
+#----------------------------------------------------------------------------------Fan pages
 @app.route("/fan")
-@login_required
 def Fan_Function():
-    return render_template("fan.html")
+    sql = """ SELECT name FROM club  """ 
+    club_names1 = db.session.execute(sql)
+    club_names2 = db.session.execute(sql)
+    return render_template("fan.html", club_names1 = club_names1,club_names2 = club_names2)
+
+@app.route("/Purchase_Ticket",methods = ['GET','POST'])
+def Purchase_Ticket_Function():
+    if(request.method == 'POST'):
+        host_name = request.form['host name']
+        guest_name = request.form['guest name']
+        start_time = timeForSQL_with_seconds(request.form['start_time'])   
+        sql1 = f"""
+                    select *
+                    from match m ,club c1, club c2
+                    where m.host_club_ID = c1.club_id
+                    and m.guest_club_ID = c2.club_id
+                    and m.start_time = '{start_time}'
+                    and c1.name = '{host_name}'
+                    and c2.name = '{guest_name}'
+                 """    
+        there_is_match = db.session.execute(sql1)     
+        if(isEmpty(there_is_match)):
+            flash("There is NO Match With Given Information")
+            return redirect(url_for("Purchase_Ticket_Function"))
+        else:    
+             sql2 =  f""" select *
+                          from match m ,club c1, club c2, Ticket t
+                          where m.host_club_ID = c1.club_id
+                          and m.guest_club_ID = c2.club_id
+                          and m.match_ID = t.match_ID
+                          and t.status = 1
+
+                        """   
+             there_is_available_tickets  = db.session.execute(sql2)
+             if(isEmpty(there_is_available_tickets)):            
+                flash("All Tickets Are Sold !")
+                return redirect(url_for("Purchase_Ticket_Function"))
+             else:
+                  fan_National_ID = getID(session["username"])
+                  sql3 = f"""exec purchaseTicket '{fan_National_ID}', '{host_name}', '{guest_name}', '{start_time}' """ 
+                  db.session.execute(sql3)
+                  db.session.commit()
+                  flash("Ticket Purchased Successfully !")
+                  return redirect(url_for("Purchase_Ticket_Function"))
+    else:
+        return redirect(url_for("Fan_Function"))
 
 #----------------------------------------------------------------------------------examples 
 @app.route("/clubs")
-@login_required
+#@login_required
 def clubs():
     sql = "SELECT * FROM club"
     result = db.session.execute(sql)
@@ -310,7 +497,7 @@ def clubs():
     return render_template("clubs.html", result=result)
 #--------------------------------------------------------------
 @app.route("/clubs/add", methods=['POST'])
-@login_required
+#@login_required
 def add_club():
     name = request.form['name']
     location = request.form['location']
@@ -324,7 +511,7 @@ def add_club():
     return redirect(url_for('home'))
 #-----------------------------------------------
 @app.route("/clubs/delete", methods=['POST'])
-@login_required
+#@login_required
 def delete_club():
     name = request.form['name']
 
@@ -335,11 +522,34 @@ def delete_club():
     flash(f"Club {name} deleted successfully!")
 
     return redirect(url_for('home'))
-# some helper functions
-def isEmpty(SQL_SET):
-    numOfRows = 0
+# ---------------------------------------------------some helper functions
+def isEmpty(SQL_SET):   
     for row in SQL_SET:
         return False
     return True    
-           
+
+def timeForSQL_without_seconds(time):
+    stage1 = time.replace('T', ' ')                   
+    stage2 = datetime.strptime(stage1, '%Y-%m-%d %H:%M')       
+    stage3 = stage2.strftime("%Y-%m-%d %H:%M:%S")
+    return stage3
+
+def timeForSQL_with_seconds(time):
+    stage1 = time.replace('T', ' ')     
+    stage2 = datetime.strptime(stage1, '%Y-%m-%d %H:%M')    
+    stage3 = stage2.replace(second=0)     
+    stage4 = stage3.strftime("%Y-%m-%d %H:%M:%S")
+    return stage4
+
+def getID(username):
+    sql = f"""select f.national_id
+              from fan f
+              where f.username = '{username}'
+            """        
+    result = db.session.execute(sql)
+    for row in result :
+        return row.national_id 
+
+
+               
     

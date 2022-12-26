@@ -23,10 +23,18 @@
 
 <h2> Purchase Ticket </h2> <br><br>
 <form action="/Purchase_Ticket" method="post">
-	<label> Write Host Club Name </label>
-	<input type="text" name="Host_name"/> <br><br>
-    <label> Write Guest Club Name </label>
-	<input type="text" name="Guest_name"/> <br><br>
+	<label> Select Host Name </label>
+	<select name="host name" required >
+		{% for name in club_names1 %}
+		  <option value='{{name.name}}'>{{name.name}}</option>
+		{% endfor %}
+	  </select><br><br>
+    <label> Select Guest Name </label>
+	<select name="guest name" required >
+		{% for name in club_names2 %}
+		  <option value='{{name.name}}'>{{name.name}}</option>
+		{% endfor %}
+	  </select><br><br>
     <label> Select Match Start Time </label>
 	<input type="datetime-local" name="start_time"/> <br><br>
 	<input type="submit" value="Purchase a Ticket !">

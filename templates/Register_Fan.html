@@ -18,12 +18,27 @@
     <input class="form-control mx-auto w-auto"  name="National id" placeholder="National ID" type="text" maxlength="20" required><br>
     <input class="form-control mx-auto w-auto"  name="phone number" placeholder="Phone Number" type="number" min = "0" max = "2147483647" required><br>
     <label> Birth Date </label>
-    <input  class="form-control mx-auto w-auto"  name="Birth Date" type="datetime-local" required><br>
+    <input onchange="validateDate()" class="form-control mx-auto w-auto" id="birth_date"  name="Birth Date" type="datetime-local" required><br>
     <input  class="form-control mx-auto w-auto"  name="Address" placeholder="Address" type="text" maxlength="20" required><br><br>
     <button class="btn btn-primary" type="submit">Register</button> <br> <br>
 
 </form>
 <br><br>
+<script>
+function validateDate(){
+  var inputDate = new Date(document.getElementById("birth_date").value);
+  var current_date = new Date();
+  if(current_date - inputDate < 0 ){
+     alert("you were born in the future ? :)");
+     document.getElementById("birth_date").value = null;
+  }
+  else if(current_date - inputDate <= 59999){ // the difference is in microseconds
+     alert("you are born just now and you are able to use the internet ? you belong to MET for Sure !");
+     document.getElementById("birth_date").value = null;
+  }
+}
+
+</script>
 
 
 

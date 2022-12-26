@@ -219,3 +219,5 @@ insert into TicketBuyingTransactions(fan_national_ID , ticket_ID) values
 (98563,  4),
 (67349,  5)
 
+
+exec deleteMatch 'club name 2', 'club name 3'
