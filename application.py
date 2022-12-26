@@ -293,8 +293,8 @@ def Register_Fan_Function():
 def System_Admin_Function():
     sql1 = """ SELECT name FROM club  """                                                                   
     sql2 = """ SELECT name FROM Stadium  """     
-    club_names = db.session.execute(sql1)
-    stadium_names = db.session.execute(sql2)
+    club_names = db.session.execute(sql1).mappings().all()
+    stadium_names = db.session.execute(sql2).mappings().all()
     return render_template("system_admin.html", club_names=club_names , stadium_names = stadium_names) 
 
 @app.route("/add_club",methods = ['GET','POST'])
@@ -441,8 +441,8 @@ def Delete_Match_Function():
 @app.route("/fan")
 def Fan_Function():
     sql = """ SELECT name FROM club  """ 
-    club_names1 = db.session.execute(sql)
-    club_names2 = db.session.execute(sql)
+    club_names1 = db.session.execute(sql).mappings().all()
+    club_names2 = db.session.execute(sql).mappings().all()
     return render_template("fan.html", club_names1 = club_names1,club_names2 = club_names2)
 
 @app.route("/Purchase_Ticket",methods = ['GET','POST'])
