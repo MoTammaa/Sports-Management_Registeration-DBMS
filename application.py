@@ -356,6 +356,7 @@ def Block_Fan_Function():
             flash(f"Fan with National_ID {fan_national_ID} Blocked Successfully !")      
     return redirect(url_for("System_Admin_Function"))  
 
+
 #--------------------------------------------------------------------------------------------------Sports Association Manager pages
 
 @app.route("/sports_association_manager")
@@ -408,7 +409,7 @@ def Delete_Match_Function():
                     """   
         result = db.session.execute(sql1)
         if(isEmpty(result)):            
-            flash("There is No Match With Given Information !")
+            flash("There is No Match With The Given Information !")
             return redirect(url_for("Delete_Match_Function"))
         else:
             sql2 = f""" exec deleteMatch '{host_name}', '{guest_name}' """                  
@@ -419,6 +420,39 @@ def Delete_Match_Function():
     else:
         return redirect(url_for("Sports_Association_Manager_Function"))
       
+# ---views
+@app.route("/all_upcoming_matches")
+def Show_All_Upcoming_Matches_Function():
+    sql = f""" select c1.name as host_club_name, c2.name as guest_club_name , m.start_time as start_Time , m.end_time as end_Time
+               from match m , club c1 , club c2
+               where m.host_club_ID = c1.club_id
+	                and m.guest_club_ID = c2.club_id
+	                and m.start_time > CURRENT_TIMESTAMP
+
+            """
+    data =  db.session.execute(sql).fetchall()
+    headers = ["Host Name" , "Guest Name" , "Start Time" , "End Time"]
+    return render_template("table.html" , viewName = "All Upcoming Matches", headers = headers, data = data )
+
+@app.route("/already_played_matches")
+def Show_All_Already_Played_Matches_Function():
+    sql = f""" select c1.name as host_club_name, c2.name as guest_club_name , m.start_time as start_Time , m.end_time as end_Time
+               from match m , club c1 , club c2
+               where m.host_club_ID = c1.club_id
+	                 and m.guest_club_ID = c2.club_id
+	                 and m.end_time < CURRENT_TIMESTAMP
+            """
+    data =  db.session.execute(sql).fetchall()
+    headers = ["Host Name" , "Guest Name" , "Start Time" , "End Time"]
+    return render_template("table.html" , viewName = "Already Played Matches", headers = headers, data = data )
+
+@app.route("/pairs_never_matched")
+def Show_Clubs_Never_Matched_Function():
+    sql = f""" select * from clubsNeverMatched """
+    data =  db.session.execute(sql).fetchall()
+    headers = ["First Club" , "Second Club"]
+    return render_template("table.html" , viewName = "Clubs Never Competed Against Each Other", headers = headers, data = data )
+
 
 
 #------------------------------Club Representative: page
@@ -483,7 +517,7 @@ def Purchase_Ticket_Function():
                  """    
         there_is_match = db.session.execute(sql1)     
         if(isEmpty(there_is_match)):
-            flash("There is NO Match With Given Information")
+            flash("There is NO Match With The Given Information !")
             return redirect(url_for("Purchase_Ticket_Function"))
         else:    
              sql2 =  f""" select *

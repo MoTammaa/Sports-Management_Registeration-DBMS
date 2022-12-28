@@ -9,21 +9,20 @@
 {% endblock %}
 
 {% block main %}
-<h1> viewName </h1>
-<table>
-    <tr>
-        {% for header in headings %}
+<h1> {{viewName}} </h1><br> <br>
+<table class = "table table-striped">
+    <tr style="background-color:#22b5f4">
+        {% for header in headers %}
         <th> {{ header }} </th>
         {% endfor %}
     </tr>
     {% for row in data %}
     <tr>
         {% for cell in row %}
-        <td> {{ cell }} </td>
+            <td> {{ cell }} </td>
         {% endfor %}
     </tr>
     {% endfor %}
 </table>
-
 
 {% endblock %}
