@@ -10,7 +10,7 @@
 
 {% block main %}
 
-<h1> Welcome {{name}} !</h1> <br> 
+<h1> Welcome, {{session['username']}} !</h1> <br> 
 <hr>
 <h2> View Available Matches  </h2> <br><br>
 <form action="/view_all_matches_that_have_tickets_starting_at_a_given_time" method="post">

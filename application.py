@@ -431,7 +431,7 @@ def Show_All_Upcoming_Matches_Function():
 
             """
     data =  db.session.execute(sql).fetchall()
-    headers = ["Host Name" , "Guest Name" , "Start Time" , "End Time"]
+    headers = ["#","Host Name" , "Guest Name" , "Start Time" , "End Time"]
     return render_template("table.html" , viewName = "All Upcoming Matches", headers = headers, data = data )
 
 @app.route("/already_played_matches")
@@ -443,14 +443,14 @@ def Show_All_Already_Played_Matches_Function():
 	                 and m.end_time < CURRENT_TIMESTAMP
             """
     data =  db.session.execute(sql).fetchall()
-    headers = ["Host Name" , "Guest Name" , "Start Time" , "End Time"]
+    headers = ["#","Host Name" , "Guest Name" , "Start Time" , "End Time"]
     return render_template("table.html" , viewName = "Already Played Matches", headers = headers, data = data )
 
 @app.route("/pairs_never_matched")
 def Show_Clubs_Never_Matched_Function():
     sql = f""" select * from clubsNeverMatched """
     data =  db.session.execute(sql).fetchall()
-    headers = ["First Club" , "Second Club"]
+    headers = ["#","First Club" , "Second Club"]
     return render_template("table.html" , viewName = "Clubs Never Competed Against Each Other", headers = headers, data = data )
 
 
@@ -566,7 +566,7 @@ def View_Matches_Function():
                                            and t.match_ID = m.match_ID)        
                  """
         data = db.session.execute(sql).fetchall()
-        headers = ["Host Club", "Guest Club", "Stadium Name", "Stadium Location"]
+        headers = ["#","Host Club", "Guest Club", "Stadium Name", "Stadium Location"]
         return render_template("/table.html" ,viewName = "All Matches That Have Available Tickets Starting At The Given Time ", headers = headers , data = data)
     else:
         return redirect(url_for("Fan_Function"))    
