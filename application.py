@@ -542,6 +542,29 @@ def Purchase_Ticket_Function():
     else:
         return redirect(url_for("Fan_Function"))
 
+#view
+@app.route("/view_all_matches_that_have_tickets_starting_at_a_given_time",methods = ['GET','POST'])
+def View_Matches_Function():
+    if(request.method == 'POST'):
+        
+        time = timeForSQL_without_seconds(request.form['m_start_time'])
+        sql = f"""select c1.name as hostName, c2.name as guestName , s.name as stadiumName , s.location as loc
+                  from Club c1 , Club c2 , Match m , Stadium s
+                  where c1.club_id = m.host_club_ID
+                        and c2.club_id = m.guest_club_ID
+                        and m.stadium_ID = s.ID
+                        and m.start_time = '{time}'
+                        and exists (select *
+                                     from Ticket t
+                                     where t.status = 1
+                                           and t.match_ID = m.match_ID)        
+                 """
+        data = db.session.execute(sql).fetchall()
+        headers = ["Host Club", "Guest Club", "Stadium Name", "Stadium Location"]
+        return render_template("/table.html" ,viewName = "All Matches That Have Available Tickets Starting At The Given Time ", headers = headers , data = data)
+    else:
+        return redirect(url_for("Fan_Function"))    
+    
 #----------------------------------------------------------------------------------examples 
 @app.route("/clubs")
 #@login_required

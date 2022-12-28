@@ -12,13 +12,12 @@
 
 <h1> Welcome {{name}} !</h1> <br> 
 <hr>
-<h2> Show Available Tickets </h2> <br><br>
-<form action="/show_available_tickts" method="post">
-	<label> Select Start Time </label>
-	<input type="datetime-local" name="start_time_forShowing"/> <br><br>
-	<input type="submit" value="Show all Matches that have available tickets starting from that time">
-</form>
-
+<h2> View Available Matches  </h2> <br><br>
+<form action="/view_all_matches_that_have_tickets_starting_at_a_given_time" method="post">
+	<label> Select Time </label>
+	<input type="datetime-local" name="m_start_time" required/> <br><br>
+	<input type="submit" value="View All Matches That Have Tickets Starting at That Time">
+</form> <br> 
 <hr>
 
 <h2> Purchase Ticket </h2> <br><br>
@@ -40,5 +39,7 @@
 	<input type="submit" value="Purchase a Ticket !">
 </form>
 <hr>
+
+
 
 {% endblock %}
