@@ -457,6 +457,7 @@ def Show_Clubs_Never_Matched_Function():
 
 #------------------------------Club Representative: page
 
+
 @app.route('/Club_Representative',methods=['GET', 'POST'])
 def CRep():
     if session['user_type'] != 'Club_Representative':
@@ -473,10 +474,15 @@ def CRep():
 
     else:
         if 'datee' in request.form:
-            date = request.form['datee']
-            sql = f"SELECT name,location,capacity FROM Stadium WHERE status = 1 AND start_time >= '{date}')"                  
+            datee = str(request.form['datee'])
+            print(type(datee))
+            sql = f"SELECT name,location,capacity FROM Stadium WHERE status = 1 AND start_time >= '{datee}'"                  
             stadiums = db.session.execute(sql).mappings().all()
-            return render_template("Club_Representative.html", stadiums=stadiums)
+
+            return render_template("Club_Representative.html")#, stadiums=stadiums)
+
+        return render_template("Club_Representative.html")
+       
             
         
 
