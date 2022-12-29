@@ -481,9 +481,10 @@ def Show_Clubs_Never_Matched_Function():
 
 
 @app.route('/Club_Representative',methods=['GET', 'POST'])
+@login_required
 def CRep():
     if session['user_type'] != 'Club_Representative':
-        return redirect('/home')
+        return redirect('/login')
     sql = f"SELECT * FROM Club WHERE club_id = (SELECT club_id FROM ClubRepresentative WHERE username = '{session['username']}')"                  
     club = db.session.execute(sql).mappings().all()
 
@@ -506,6 +507,7 @@ def CRep():
             
 
 @app.route('/CR/requestastadium',methods=['POST'])
+@login_required
 def CRstadium():            
     sql = f"SELECT * FROM Club WHERE club_id = (SELECT club_id FROM ClubRepresentative WHERE username = '{session['username']}')"                  
     club = db.session.execute(sql).mappings().all()[0]
@@ -531,9 +533,10 @@ def CRstadium():
 
 
 @app.route('/Stadium_Manager',methods=['GET', 'POST'])
+@login_required
 def StdMng():
     if session['user_type'] != 'Stadium_Manager':
-        return redirect('/home')
+        return redirect('/login')
     sql = f"SELECT * FROM Stadium S WHERE S.ID = (SELECT stadium_id FROM StadiumManager WHERE username = '{session['username']}')"                  
     stadium = db.session.execute(sql).mappings().all()
 
