@@ -105,7 +105,7 @@ def login():
         if len(results := db.session.execute(f"SELECT * FROM Fan WHERE username = '{username}'").mappings().all()) == 1:
             type = 'Fan'
         elif len(results := db.session.execute(f"SELECT * FROM SystemAdmin WHERE username = '{username}'").mappings().all()) == 1:
-            type = 'System_Admin'
+            type = 'System_admin'
         elif len(results := db.session.execute(f"SELECT * FROM ClubRepresentative WHERE username = '{username}'").mappings().all()) == 1:
             type = 'Club_Representative'
         elif len(results := db.session.execute(f"SELECT * FROM SportsAssociationManager WHERE username = '{username}'").mappings().all()) == 1:
