@@ -606,7 +606,7 @@ where mtch.start_time = @start_time
 	  and mtch.stadium_ID = @stadium_id
 
 update HostRequest
-set status = 'Accepted' where representative_ID = @host_id and manager_ID = @manager_id and match_ID = @match_id
+set status = 'Accepted' where representative_ID = @rep_id and manager_ID = @manager_id and match_ID = @match_id
 update Match
 set stadium_ID = @stadium_id where match_ID = @match_id
 

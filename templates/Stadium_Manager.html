@@ -9,4 +9,63 @@
 
 
 
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Club Representative</th>
+        <th scope="col">Host Club</th>
+        <th scope="col">Guest Club</th>
+        <th scope="col">Start Time</th>
+        <th scope="col">End Time</th>
+        <th scope="col">Status</th>
+        <th scope="col">Accept</th>
+        <th scope="col">Reject</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    {%for r in requests%}
+        <tr>
+            <th scope="row">{{loop.index}}</th>
+            <td>{{r.representative}}</td>
+            <td>{{r.host}}</td>
+            <td>{{r.guest}}</td>
+            <td>{{r.start_time}}</td>
+            <td>{{r.end_time}}</td>
+            <td>{{r.status}}</td>
+            {% if r.status == 'Accepted' or r.status == 'Rejected' %}
+                <td>__</td>
+            {% else %}
+                <td>
+                    <form action="/Stadium_Manager/accept" method="post">
+                        <input type="hidden" name="hostC" value="{{r.host}}">
+                        <input type="hidden" name="guestC" value="{{r.guest}}">
+                        <input type="hidden" name="start" value="{{r.start_time}}">
+                        <button type="submit" class="btn btn-success">Accept</button>
+                    </form>
+                </td>
+            {% endif %}
+            {% if r.status == 'Accepted' or r.status == 'Rejected' %}
+                <td>__</td>
+            {% else %}
+                <td>
+                    <form action="/Stadium_Manager/reject" method="post">
+                        <input type="hidden" name="hostC" value="{{r.host}}">
+                        <input type="hidden" name="guestC" value="{{r.guest}}">
+                        <input type="hidden" name="start" value="{{r.start_time}}">
+                        <button type="submit" class="btn btn-danger">Reject</button>
+                    </form>
+                </td>
+            {% endif %}
+        </tr>
+    {%endfor%}
+
+
+    </tbody>
+</table>
+
+
+
+
 {% endblock %}

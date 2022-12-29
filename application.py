@@ -103,13 +103,13 @@ def login():
         #find the type and name of the user
         results=[]
         if len(results := db.session.execute(f"SELECT * FROM Fan WHERE username = '{username}'").mappings().all()) == 1:
-            type = 'Fan'
+            type = 'fan'
         elif len(results := db.session.execute(f"SELECT * FROM SystemAdmin WHERE username = '{username}'").mappings().all()) == 1:
-            type = 'System_admin'
+            type = 'system_admin'
         elif len(results := db.session.execute(f"SELECT * FROM ClubRepresentative WHERE username = '{username}'").mappings().all()) == 1:
             type = 'Club_Representative'
         elif len(results := db.session.execute(f"SELECT * FROM SportsAssociationManager WHERE username = '{username}'").mappings().all()) == 1:
-            type = 'Sports_Association_Manager'
+            type = 'sports_association_manager'
         elif len(results := db.session.execute(f"SELECT * FROM StadiumManager WHERE username = '{username}'").mappings().all()) == 1:
             type = 'Stadium_Manager'
         else:
@@ -123,9 +123,10 @@ def login():
         
         # Redirect user to home page
         print("login successfullllll \n Welcome", session["name"])
-        return redirect("/home")
+        return redirect("/"+session["user_type"])
     else:
         return render_template("login.html")
+
 
 #----------------------------- logout request
 
@@ -528,10 +529,35 @@ def CRstadium():
 
 #------------------------------Stadium Manager page
 
-@app.route('/Stadium_Manager',methods=['GET', 'POST'])
-def CRep2():
 
-    return render_template('Stadium_Manager.html')
+@app.route('/Stadium_Manager',methods=['GET', 'POST'])
+def StdMng():
+    if session['user_type'] != 'Stadium_Manager':
+        return redirect('/home')
+    sql = f"SELECT * FROM Stadium S WHERE S.ID = (SELECT stadium_id FROM StadiumManager WHERE username = '{session['username']}')"                  
+    stadium = db.session.execute(sql).mappings().all()
+
+    sql = f"SELECT dbo.getName(M.host_club_ID) AS host, dbo.getName(M.guest_club_ID) AS guest, M.start_time AS start_time, M.end_time AS end_time, R.status AS status, CR.name AS representative  FROM HostRequest R INNER JOIN Match M ON M.match_ID = R.match_ID INNER JOIN ClubRepresentative CR ON R.representative_ID = CR.ID WHERE R.manager_ID = (SELECT ID FROM StadiumManager M WHERE M.username='{session['username']}')"
+    requests = db.session.execute(sql).mappings().all()
+    
+    return render_template('Stadium_Manager.html', stadium=stadium, requests=requests)
+
+
+@app.route('/Stadium_Manager/accept',methods=['POST'])
+def StdAcc():
+    sql= f"EXEC acceptRequest '{session['username']}', '{request.form['hostC']}', '{request.form['guestC']}', '{request.form['start']}'"
+    db.session.execute(sql)
+    db.session.commit()
+    flash('Request Accepted')
+    return redirect('/Stadium_Manager')
+
+@app.route('/Stadium_Manager/reject',methods=['POST'])
+def StdRej():
+    sql= f"EXEC rejectRequest '{session['username']}', '{request.form['hostC']}', '{request.form['guestC']}', '{request.form['start']}'"
+    db.session.execute(sql)
+    db.session.commit()
+    flash('Request Rejected')
+    return redirect('/Stadium_Manager')
 
 
 
