@@ -565,6 +565,8 @@ RETURN
 END
 
 go -- xix
+
+--DROP PROCEDURE acceptRequest
 create proc acceptRequest
 @manager_username varchar(20) , @host_name varchar(20) , @guest_name varchar(20) , @start_time datetime
 as
@@ -604,7 +606,7 @@ where mtch.start_time = @start_time
 	  and mtch.stadium_ID = @stadium_id
 
 update HostRequest
-set status = 1 where representative_ID = @host_id and manager_ID = @manager_id and match_ID = @match_id
+set status = 'Accepted' where representative_ID = @host_id and manager_ID = @manager_id and match_ID = @match_id
 update Match
 set stadium_ID = @stadium_id where match_ID = @match_id
 
@@ -622,6 +624,8 @@ begin
 end
 
 go -- xx
+
+--DROP PROCEDURE rejectRequest
 CREATE PROC rejectRequest
 @manager_username VARCHAR(20),
 @host_club VARCHAR(20), @guest_club VARCHAR(20), 
@@ -642,7 +646,7 @@ AS
 		WHERE SM.username = @manager_username
 
 	UPDATE HostRequest 
-		SET status = 0
+		SET status = 'Rejected'
 		WHERE HostRequest.match_ID = @match_id
 			AND HostRequest.manager_ID = @manager_id
 
