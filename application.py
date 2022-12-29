@@ -123,7 +123,7 @@ def login():
         
         # Redirect user to home page
         print("login successfullllll \n Welcome", session["name"])
-        return redirect("/"+session["user_type"])
+        return redirect("/"+type)
     else:
         return render_template("login.html")
 
@@ -297,7 +297,7 @@ def Register_Fan_Function():
 @app.route("/system_admin",methods = ['GET','POST'])
 @login_required
 def System_Admin_Function():
-    if(session["user_type"] != "System_admin"):
+    if(session["user_type"] != "system_admin"):
         return redirect(url_for("login"))
 
     sql1 = """ SELECT name FROM club  """                                                                   
