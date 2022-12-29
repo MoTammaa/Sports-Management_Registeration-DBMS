@@ -100,16 +100,17 @@ def login():
         if len(result) != 1 :
             return render_template("login.html", logMes="invalid username and/or password"), 403
 
-        #find the type of the user
-        if len(db.session.execute(f"SELECT * FROM Fan WHERE username = '{username}'").mappings().all()) == 1:
+        #find the type and name of the user
+        results=[]
+        if len(results := db.session.execute(f"SELECT * FROM Fan WHERE username = '{username}'").mappings().all()) == 1:
             type = 'Fan'
-        elif len(db.session.execute(f"SELECT * FROM SystemAdmin WHERE username = '{username}'").mappings().all()) == 1:
+        elif len(results := db.session.execute(f"SELECT * FROM SystemAdmin WHERE username = '{username}'").mappings().all()) == 1:
             type = 'System_Admin'
-        elif len(db.session.execute(f"SELECT * FROM ClubRepresentative WHERE username = '{username}'").mappings().all()) == 1:
+        elif len(results := db.session.execute(f"SELECT * FROM ClubRepresentative WHERE username = '{username}'").mappings().all()) == 1:
             type = 'Club_Representative'
-        elif len(db.session.execute(f"SELECT * FROM SportsAssociationManager WHERE username = '{username}'").mappings().all()) == 1:
+        elif len(results := db.session.execute(f"SELECT * FROM SportsAssociationManager WHERE username = '{username}'").mappings().all()) == 1:
             type = 'Sports_Association_Manager'
-        elif len(db.session.execute(f"SELECT * FROM StadiumManager WHERE username = '{username}'").mappings().all()) == 1:
+        elif len(results := db.session.execute(f"SELECT * FROM StadiumManager WHERE username = '{username}'").mappings().all()) == 1:
             type = 'Stadium_Manager'
         else:
             type = "undefined"
@@ -117,9 +118,11 @@ def login():
         # Remember which user has logged in
         session["username"] = username
         session["user_type"] = type
+        if len(results) == 1:
+            session["name"] = results[0].name
         
         # Redirect user to home page
-        print("login successfullllll")
+        print("login successfullllll \n Welcome", session["name"])
         return redirect("/home")
     else:
         return render_template("login.html")
@@ -474,29 +477,44 @@ def Show_Clubs_Never_Matched_Function():
 def CRep():
     if session['user_type'] != 'Club_Representative':
         return redirect('/home')
+    sql = f"SELECT * FROM Club WHERE club_id = (SELECT club_id FROM ClubRepresentative WHERE username = '{session['username']}')"                  
+    club = db.session.execute(sql).mappings().all()
 
-    if request.method == 'GET':
-        sql = f"SELECT * FROM Club WHERE club_id = (SELECT club_id FROM ClubRepresentative WHERE username = '{session['username']}')"                  
-        club = db.session.execute(sql).mappings().all()
+    sql = f"SELECT * FROM dbo.upcomingMatchesOfClub('{club[0].name}')"                
+    matches = db.session.execute(sql).mappings().all()
 
-        sql = f"SELECT * FROM dbo.upcomingMatchesOfClub('{club[0].name}')"                
-        matches = db.session.execute(sql).mappings().all()
-
-        return render_template("Club_Representative.html", club=club, matches=matches)
-
-    else:
-        if 'datee' in request.form:
+    if request.method == 'POST':
+        if 'datee' in request.form and len(str(request.form['datee'])) !=0:
             datee = str(request.form['datee'])
-            print(type(datee))
-            sql = f"SELECT name,location,capacity FROM Stadium WHERE status = 1 AND start_time >= '{datee}'"                  
+            print(len(datee))
+            sql = f"""SELECT name,location,capacity FROM Stadium S WHERE
+            NOT EXISTS( SELECT * FROM Match M WHERE S.ID = M.stadium_id
+                AND start_time >= '{datee}')"""                  
             stadiums = db.session.execute(sql).mappings().all()
 
-            return render_template("Club_Representative.html")#, stadiums=stadiums)
+            return render_template("Club_Representative.html", stadiums=stadiums, club=club, matches=matches)
 
-        return render_template("Club_Representative.html")
+    return render_template("Club_Representative.html", club=club, matches=matches)
        
             
+
+@app.route('/CR/requestastadium',methods=['POST'])
+def CRstadium():            
+    sql = f"SELECT * FROM Club WHERE club_id = (SELECT club_id FROM ClubRepresentative WHERE username = '{session['username']}')"                  
+    club = db.session.execute(sql).mappings().all()[0]
+    print("dt: ",str(request.form['matchdt']), "std: ", request.form['stdname'])
+
+    if len(db.session.execute(f"select mt.match_ID from Match mt where mt.host_club_ID = '{club.club_id}' and mt.start_time = '{timeForSQL_with_seconds(request.form['matchdt'])}'").mappings().all()) <1:
+        flash("Cannot find the specified match or is invalid to request!")
+        return redirect('/Club_Representative')
         
+
+    sql = f"EXEC addHostRequest '{club.name}', '{request.form['stdname']}','{timeForSQL_with_seconds(request.form['matchdt'])}'"                
+    db.session.execute(sql)
+    db.session.commit()
+    
+    flash('Request submitted successfully!')
+    return redirect('/Club_Representative')
 
 
 

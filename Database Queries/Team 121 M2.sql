@@ -479,6 +479,8 @@ BEGIN
 END
 
 go -- xv 
+
+--DROP PROCEDURE addHostRequest
 create proc addHostRequest
 @club_name varchar(20) , @stadium_name varchar(20), @start_time datetime
 as 
@@ -508,7 +510,6 @@ select @match_id = mt.match_ID
 from Match mt
 where mt.host_club_ID = @club_id
       and mt.start_time = @start_time
-	  and mt.stadium_ID = @stadium_id
 	  
 
 insert into HostRequest(representative_ID , manager_ID , match_ID) values -- no status mentioned, left for deault value, whether 'null' or 'unhandled'
@@ -655,10 +656,13 @@ insert into Fan(username ,national_id , name , birth_date , address , phone_no ,
 (@fan_user_name , @fan_national_id , @fan_name , @fan_birth_date , @fan_address , @fan_phone_number ,1)
 
 go -- xxii
+
+--DROP FUNCTION upcomingMatchesOfClub
 CREATE FUNCTION upcomingMatchesOfClub(@club_name VARCHAR(20)) 
 RETURNS @upcomingMatches TABLE(host_club VARCHAR(20),
 						guest_club VARCHAR(20),
 						start_time DATETIME,
+						end_time DATETIME,
 						stadium VARCHAR(20)
 						)
 AS
@@ -670,14 +674,14 @@ BEGIN
 	INSERT INTO @upcomingMatches
 		SELECT dbo.getName(M.host_club_ID) AS Host 
 			 , dbo.getName(M.guest_club_ID) AS Guest
-			 , M.start_time, dbo.getStadiumName(M.stadium_ID) AS Stadium
+			 , M.start_time,M.end_time, dbo.getStadiumName(M.stadium_ID) AS Stadium
 		FROM Match M
 			WHERE M.start_time >= CURRENT_TIMESTAMP
 				AND (M.host_club_ID = @cid OR M.guest_club_ID = @cid)
 RETURN
 END
-
-go -- xxiii
+GO
+ -- xxiii
 create function availableMatchesToAttend 
 (@start_time datetime)
 RETURNS @result TABLE(host varchar(20) , guest varchar(20) , start_tim datetime , stadName varchar(20))
