@@ -252,9 +252,7 @@ def Register_Stadium_Manager_Function():
 
     else:    
         sql = """select s.name 
-                from Stadium s left outer join StadiumManager m  
-                on s.ID = m.stadium_ID  
-                where m.stadium_ID is null"""       
+                from Stadium s"""       
         Stadiums = db.session.execute(sql)
         available_stadiums = [] 
         for Stadium in Stadiums:
