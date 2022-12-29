@@ -56,6 +56,7 @@ EXEC purchaseTicket '232323', 'Real Madrid', 'Barcelona','2023-9-15 09:00:00'
 EXEC dropAllTables;
 EXEC createAllTables;
 EXEC clearAllTables;
+EXEC insertAdmin;
 
 
 

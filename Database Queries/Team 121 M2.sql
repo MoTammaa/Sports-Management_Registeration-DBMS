@@ -1,4 +1,10 @@
-﻿  
+﻿--DROP PROCEDURE insertAdmin 
+CREATE PROC insertAdmin AS
+	insert into SystemUser(username , password) values 
+	('admin' , 'admin')
+	insert into SystemAdmin (name , username) values 
+	('admin' , 'admin' )
+
 
 go -- a
 CREATE PROC createAllTables AS
