@@ -296,6 +296,9 @@ def Register_Fan_Function():
 @app.route("/system_admin",methods = ['GET','POST'])
 @login_required
 def System_Admin_Function():
+    if(session["user_type"] != "System_admin"):
+        return redirect(url_for("login"))
+
     sql1 = """ SELECT name FROM club  """                                                                   
     sql2 = """ SELECT name FROM Stadium  """     
     club_names = db.session.execute(sql1).mappings().all()
@@ -372,6 +375,8 @@ def Block_Fan_Function():
 @app.route("/sports_association_manager")
 @login_required
 def Sports_Association_Manager_Function():
+    if(session["user_type"] != "Sports_Association_Manager"):
+        return redirect(url_for("login"))
     sql1 = """ SELECT * FROM club  """
     sql2 = """ SELECT * FROM Stadium s""" 
     club_names1 = db.session.execute(sql1)
@@ -435,6 +440,7 @@ def Delete_Match_Function():
       
 # ---views
 @app.route("/all_upcoming_matches")
+@login_required
 def Show_All_Upcoming_Matches_Function():
     sql = f""" select c1.name as host_club_name, c2.name as guest_club_name , m.start_time as start_Time , m.end_time as end_Time
                from match m , club c1 , club c2
@@ -523,7 +529,7 @@ def CRstadium():
 #------------------------------Stadium Manager page
 
 @app.route('/Stadium_Manager',methods=['GET', 'POST'])
-def CRep():
+def CRep2():
 
     return render_template('Stadium_Manager.html')
 
@@ -535,6 +541,8 @@ def CRep():
 @app.route("/fan")
 @login_required
 def Fan_Function():
+    if(session["user_type"] != "Fan"):
+        return redirect(url_for("login"))
     sql = """ SELECT name FROM club  """ 
     club_names1 = db.session.execute(sql).mappings().all()
     club_names2 = db.session.execute(sql).mappings().all()
@@ -608,40 +616,40 @@ def View_Matches_Function():
         return redirect(url_for("Fan_Function"))    
     
 #----------------------------------------------------------------------------------examples (to be delted)
-@app.route("/clubs")
-#@login_required
-def clubs():
-    sql = "SELECT * FROM club"
-    result = db.session.execute(sql)
+# @app.route("/clubs")
+# #@login_required
+# def clubs():
+#     sql = "SELECT * FROM club"
+#     result = db.session.execute(sql)
 
-    return render_template("clubs.html", result=result)
-#--------------------------------------------------------------
-@app.route("/clubs/add", methods=['POST'])
-#@login_required
-def add_club():
-    name = request.form['name']
-    location = request.form['location']
+#     return render_template("clubs.html", result=result)
+# #--------------------------------------------------------------
+# @app.route("/clubs/add", methods=['POST'])
+# #@login_required
+# def add_club():
+#     name = request.form['name']
+#     location = request.form['location']
 
-    sql = f"exec addClub '{name}', '{location}'"
-    db.session.execute(sql)
-    db.session.commit()
+#     sql = f"exec addClub '{name}', '{location}'"
+#     db.session.execute(sql)
+#     db.session.commit()
 
-    flash(f"Club {name} ')' in {location} added successfully!")
+#     flash(f"Club {name} ')' in {location} added successfully!")
 
-    return redirect(url_for('home'))
-#-----------------------------------------------
-@app.route("/clubs/delete", methods=['POST'])
-#@login_required
-def delete_club():
-    name = request.form['name']
+#     return redirect(url_for('home'))
+# #-----------------------------------------------
+# @app.route("/clubs/delete", methods=['POST'])
+# #@login_required
+# def delete_club():
+#     name = request.form['name']
 
-    sql = f"DELETE FROM club WHERE name='{name}'"
-    db.session.execute(sql)
-    db.session.commit()
+#     sql = f"DELETE FROM club WHERE name='{name}'"
+#     db.session.execute(sql)
+#     db.session.commit()
 
-    flash(f"Club {name} deleted successfully!")
+#     flash(f"Club {name} deleted successfully!")
 
-    return redirect(url_for('home'))
+#     return redirect(url_for('home'))
 # ---------------------------------------------------some helper functions
 def isEmpty(SQL_SET):   
     for row in SQL_SET:
