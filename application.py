@@ -522,7 +522,10 @@ def CRstadium():
 
 #------------------------------Stadium Manager page
 
+@app.route('/Stadium_Manager',methods=['GET', 'POST'])
+def CRep():
 
+    return render_template('Stadium_Manager.html')
 
 
 
