@@ -6,7 +6,21 @@
 
 {% block main %}
 
-
+    <h1 class="display-5">Welcome {{session['username']}},</h1>
+    <p><em>Here is your summary for the day...</em></p>
+    <br>
+    {%if stadium%}
+        <div class="position-relative top-0 start-0">
+        <figure>
+            <blockquote class="blockquote">
+            <p>{{stadium[0].name}}</p>
+            </blockquote>
+            <figcaption class="blockquote-footer">
+                id: {{stadium[0].ID}}, & location: <cite title="Source Title">{{stadium[0].location}}, capacity: {{stadium[0].capacity}}</cite>
+            </figcaption>
+        </figure>
+        </div>
+    {% endif %}
 
 
 <table class="table">

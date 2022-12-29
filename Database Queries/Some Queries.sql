@@ -50,8 +50,10 @@ SELECT * FROM dbo.matchesRankedByAttendance()
 EXEC purchaseTicket '232323', 'Real Madrid', 'Barcelona','2023-9-15 09:00:00'
 
 
+---------
+SELECT dbo.getName(M.host_club_ID) AS host, dbo.getName(M.guest_club_ID) AS guest, M.start_time,M.end_time, R.status, CR.name AS representative  FROM HostRequest R INNER JOIN Match M ON M.match_ID = R.match_ID INNER JOIN ClubRepresentative CR ON R.representative_ID = CR.ID WHERE R.manager_ID = '2'
 
-
+UPDATE HostRequest set status = 'Unhandled' WHERE manager_ID = '2'
 
 EXEC dropAllTables;
 EXEC createAllTables;
