@@ -36,7 +36,7 @@ from functools import wraps
 db = SQLAlchemy()
 app = Flask(__name__)
 app.secret_key = "my secret key"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mssql+pyodbc://db-porject"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mssql+pyodbc://db-porject" #mssql://foten_SQLLogin_1:dyx51s88pm@myprojectdb.mssql.somee.com/myprojectdb
 db.init_app(app)
 
 # Configure session to use filesystem (instead of signed cookies)
@@ -50,7 +50,7 @@ Session(app)
 @app.route("/")
 def index():
     #if not logged in
-    return redirect("/login")
+    return redirect("/home")
 
 #------------------------------ login requirement decorator
 
@@ -66,7 +66,6 @@ def login_required(test):
 
 #------------------------------ home page
 @app.route("/home")
-@login_required
 def home():
     return render_template("home.html")
 
@@ -123,7 +122,7 @@ def login():
         
         # Redirect user to home page
         print("login successfullllll \n Welcome", session["name"])
-        return redirect("/"+type)
+        return redirect("/home")
     else:
         return render_template("login.html")
 
@@ -252,7 +251,9 @@ def Register_Stadium_Manager_Function():
 
     else:    
         sql = """select s.name 
-                from Stadium s"""       
+                from Stadium s left outer join StadiumManager m  
+                on s.ID = m.stadium_ID  
+                where m.stadium_ID is null"""       
         Stadiums = db.session.execute(sql)
         available_stadiums = [] 
         for Stadium in Stadiums:
@@ -296,7 +297,7 @@ def Register_Fan_Function():
 @login_required
 def System_Admin_Function():
     if(session["user_type"] != "system_admin"):
-        return redirect(url_for("login"))
+        return redirect(url_for("home"))
 
     sql1 = """ SELECT name FROM club  """                                                                   
     sql2 = """ SELECT name FROM Stadium  """     
@@ -374,8 +375,8 @@ def Block_Fan_Function():
 @app.route("/sports_association_manager")
 @login_required
 def Sports_Association_Manager_Function():
-    if(session["user_type"] != "Sports_Association_Manager"):
-        return redirect(url_for("login"))
+    if(session["user_type"] != "sports_association_manager"):
+        return redirect(url_for("home"))
     sql1 = """ SELECT * FROM club  """
     sql2 = """ SELECT * FROM Stadium s""" 
     club_names1 = db.session.execute(sql1)
@@ -482,7 +483,7 @@ def Show_Clubs_Never_Matched_Function():
 @login_required
 def CRep():
     if session['user_type'] != 'Club_Representative':
-        return redirect('/login')
+        return redirect('/home')
     sql = f"SELECT * FROM Club WHERE club_id = (SELECT club_id FROM ClubRepresentative WHERE username = '{session['username']}')"                  
     club = db.session.execute(sql).mappings().all()
 
@@ -534,7 +535,7 @@ def CRstadium():
 @login_required
 def StdMng():
     if session['user_type'] != 'Stadium_Manager':
-        return redirect('/login')
+        return redirect('/home')
     sql = f"SELECT * FROM Stadium S WHERE S.ID = (SELECT stadium_id FROM StadiumManager WHERE username = '{session['username']}')"                  
     stadium = db.session.execute(sql).mappings().all()
 
@@ -568,8 +569,8 @@ def StdRej():
 @app.route("/fan")
 @login_required
 def Fan_Function():
-    if(session["user_type"] != "Fan"):
-        return redirect(url_for("login"))
+    if(session["user_type"] != "fan"):
+        return redirect(url_for("home"))
     sql = """ SELECT name FROM club  """ 
     club_names1 = db.session.execute(sql).mappings().all()
     club_names2 = db.session.execute(sql).mappings().all()
