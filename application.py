@@ -101,16 +101,26 @@ def login():
 
         #find the type and name of the user
         results=[]
-        if len(results := db.session.execute(f"SELECT * FROM Fan WHERE username = '{username}'").mappings().all()) == 1:
+        if len(db.session.execute(f"SELECT * FROM Fan WHERE username = '{username}'").mappings().all()) == 1:
             type = 'fan'
-        elif len(results := db.session.execute(f"SELECT * FROM SystemAdmin WHERE username = '{username}'").mappings().all()) == 1:
+            results = db.session.execute(f"SELECT * FROM Fan WHERE username = '{username}'").mappings().all()
+
+        elif len(db.session.execute(f"SELECT * FROM SystemAdmin WHERE username = '{username}'").mappings().all()) == 1:
             type = 'system_admin'
-        elif len(results := db.session.execute(f"SELECT * FROM ClubRepresentative WHERE username = '{username}'").mappings().all()) == 1:
+            results = db.session.execute(f"SELECT * FROM SystemAdmin WHERE username = '{username}'").mappings().all()
+
+        elif len(db.session.execute(f"SELECT * FROM ClubRepresentative WHERE username = '{username}'").mappings().all()) == 1:
             type = 'Club_Representative'
-        elif len(results := db.session.execute(f"SELECT * FROM SportsAssociationManager WHERE username = '{username}'").mappings().all()) == 1:
+            results = db.session.execute(f"SELECT * FROM ClubRepresentative WHERE username = '{username}'").mappings().all()
+
+        elif len(db.session.execute(f"SELECT * FROM SportsAssociationManager WHERE username = '{username}'").mappings().all()) == 1:
             type = 'sports_association_manager'
-        elif len(results := db.session.execute(f"SELECT * FROM StadiumManager WHERE username = '{username}'").mappings().all()) == 1:
+            results = db.session.execute(f"SELECT * FROM SportsAssociationManager WHERE username = '{username}'").mappings().all()
+
+        elif len(db.session.execute(f"SELECT * FROM StadiumManager WHERE username = '{username}'").mappings().all()) == 1:
             type = 'Stadium_Manager'
+            results = db.session.execute(f"SELECT * FROM StadiumManager WHERE username = '{username}'").mappings().all()
+
         else:
             type = "undefined"
 
