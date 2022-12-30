@@ -36,7 +36,7 @@ from functools import wraps
 db = SQLAlchemy()
 app = Flask(__name__)
 app.secret_key = "my secret key"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mssql+pyodbc://db-porject" #mssql://foten_SQLLogin_1:dyx51s88pm@myprojectdb.mssql.somee.com/myprojectdb
+app.config["SQLALCHEMY_DATABASE_URI"] = "mssql://foten_SQLLogin_1:dyx51s88pm@myprojectdb.mssql.somee.com/myprojectdb?driver=SQL+Server+Native+Client+11.0"  #old local: "mssql+pyodbc://db-porject"
 db.init_app(app)
 
 # Configure session to use filesystem (instead of signed cookies)
