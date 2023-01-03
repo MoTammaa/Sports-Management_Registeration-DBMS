@@ -36,7 +36,7 @@ from functools import wraps
 db = SQLAlchemy()
 app = Flask(__name__)
 app.secret_key = "my secret key"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mssql://foten_SQLLogin_1:dyx51s88pm@myprojectdb.mssql.somee.com/myprojectdb?driver=SQL+Server+Native+Client+11.0"  #old local: "mssql+pyodbc://db-porject"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mssql+pyodbc://db-porject"
 db.init_app(app)
 
 # Configure session to use filesystem (instead of signed cookies)
@@ -389,11 +389,11 @@ def Sports_Association_Manager_Function():
         return redirect(url_for("home"))
     sql1 = """ SELECT * FROM club  """
     sql2 = """ SELECT * FROM Stadium s""" 
-    club_names1 = db.session.execute(sql1)
-    club_names2 = db.session.execute(sql1)
-    club_names3 = db.session.execute(sql1)
-    club_names4 = db.session.execute(sql1)   
-    stadiums = db.session.execute(sql2)
+    club_names1 = db.session.execute(sql1).mappings().all()
+    club_names2 = db.session.execute(sql1).mappings().all()
+    club_names3 = db.session.execute(sql1).mappings().all()
+    club_names4 = db.session.execute(sql1).mappings().all()
+    stadiums = db.session.execute(sql2).mappings().all()
     return render_template("sports_association_manager.html", club_names1 = club_names1,club_names2 = club_names2,club_names3 = club_names3,club_names4 = club_names4,stadiums = stadiums)
     
 @app.route("/add_match",methods = ['GET','POST'])
@@ -409,8 +409,8 @@ def Add_Match_Function():
             flash(f"in our world, a Club can't play against itself ! :) ")
             return redirect(url_for("Add_Match_Function")) 
         else:
-            sql = f""" INSERT INTO Match(host_club_ID , guest_club_ID , stadium_ID , start_time , end_time) VALUES
-                    ('{host_id}', '{guest_id}', '{stadium_id}', '{start_time}', '{end_time}')
+            sql = f""" INSERT INTO Match(host_club_ID , guest_club_ID , start_time , end_time) VALUES
+                    ('{host_id}', '{guest_id}', '{start_time}', '{end_time}')
 
                     """
             db.session.execute(sql)
@@ -500,6 +500,12 @@ def CRep():
     sql = f"SELECT * FROM dbo.upcomingMatchesOfClub('{club[0].name}')"                
     matches = db.session.execute(sql).mappings().all()
 
+    sql = f"SELECT * FROM dbo.upcomingMatchesOfClub('{club[0].name}') WHERE host_club = '{club[0].name}' AND stadium IS NULL"                
+    hostmatches = db.session.execute(sql).mappings().all()
+
+    sql = "SELECT name FROM Stadium"
+    stadiumres = db.session.execute(sql).mappings().all()
+
     if request.method == 'POST':
         if 'datee' in request.form and len(str(request.form['datee'])) !=0:
             datee = str(request.form['datee'])
@@ -508,10 +514,14 @@ def CRep():
             NOT EXISTS( SELECT * FROM Match M WHERE S.ID = M.stadium_id
                 AND start_time >= '{datee}')"""                  
             stadiums = db.session.execute(sql).mappings().all()
+            
+            return render_template("Club_Representative.html", stadiums=stadiums, club=club, matches=matches, hostmatches=hostmatches, stadiumres=stadiumres )
+        else:
+            flash('Enter a valid date')
+            return render_template("Club_Representative.html", club=club, matches=matches, hostmatches=hostmatches ,stadiumres=stadiumres)
 
-            return render_template("Club_Representative.html", stadiums=stadiums, club=club, matches=matches)
 
-    return render_template("Club_Representative.html", club=club, matches=matches)
+    return render_template("Club_Representative.html", club=club, matches=matches, hostmatches=hostmatches, stadiumres=stadiumres )
        
             
 
@@ -520,14 +530,14 @@ def CRep():
 def CRstadium():            
     sql = f"SELECT * FROM Club WHERE club_id = (SELECT club_id FROM ClubRepresentative WHERE username = '{session['username']}')"                  
     club = db.session.execute(sql).mappings().all()[0]
-    print("dt: ",str(request.form['matchdt']), "std: ", request.form['stdname'])
+    #print("dt: ",str(request.form['matchdt']), "std: ", request.form['stdname'])
 
-    if len(db.session.execute(f"select mt.match_ID from Match mt where mt.host_club_ID = '{club.club_id}' and mt.start_time = '{timeForSQL_with_seconds(request.form['matchdt'])}'").mappings().all()) <1:
+    if len(db.session.execute(f"select mt.match_ID from Match mt where mt.host_club_ID = '{club.club_id}' and mt.start_time = '{request.form['matchdt']}'").mappings().all()) <1:
         flash("Cannot find the specified match or is invalid to request!")
         return redirect('/Club_Representative')
         
 
-    sql = f"EXEC addHostRequest '{club.name}', '{request.form['stdname']}','{timeForSQL_with_seconds(request.form['matchdt'])}'"                
+    sql = f"EXEC addHostRequest '{club.name}', '{request.form['stdname']}','{request.form['matchdt']}'"                
     db.session.execute(sql)
     db.session.commit()
     

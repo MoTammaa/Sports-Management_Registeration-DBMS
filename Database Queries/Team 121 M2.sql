@@ -578,38 +578,37 @@ create proc acceptRequest
 as
 
 declare @host_id int
-select @host_id = c.club_id
+select TOP 1 @host_id = c.club_id
 from Club c
 where c.name = @host_name
 
 declare @rep_id int
-select @rep_id = rep.ID
+select TOP 1 @rep_id = rep.ID
 from ClubRepresentative rep
 where rep.club_ID = @host_id
 
 declare @manager_id int
-select @manager_id = m.ID
+select TOP 1 @manager_id = m.ID
 from StadiumManager m
 where m.username = @manager_username
 
 declare @guest_id int
-select @guest_id = cl.club_id
+select TOP 1 @guest_id = cl.club_id
 from Club cl
 where cl.name = @guest_name
 
 declare @stadium_id int
-select @stadium_id = s.ID
+select TOP 1 @stadium_id = s.ID
 from stadium s , StadiumManager mn
 where s.ID = mn.stadium_ID 
       and mn.ID = @manager_id
 
 declare @match_id int
-select @match_id = mtch.match_ID
+select TOP 1 @match_id = mtch.match_ID
 from match mtch
 where mtch.start_time = @start_time 
       and mtch.host_club_ID = @host_id
 	  and mtch.guest_club_ID = @guest_id
-	  and mtch.stadium_ID = @stadium_id
 
 update HostRequest
 set status = 'Accepted' where representative_ID = @rep_id and manager_ID = @manager_id and match_ID = @match_id

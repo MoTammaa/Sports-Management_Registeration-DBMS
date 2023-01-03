@@ -66,7 +66,7 @@
 
     <br>
     <form action="/Club_Representative" method="post">
-        <label>Get Stadiums available at: </label>
+        <label>Get Stadiums available starting: </label>
         <input type="date" id="datee" name="datee">
         <input class="btn-primary" type="submit" value="view stadiums">
     </form>
@@ -115,14 +115,24 @@
             <form action="/CR/requestastadium" method="post">
                 <div class="modal-body">
 
-                    <div class="form-floating">
-                        <textarea class="form-control" placeholder="Stadium Name" id="stdname" name="stdname"></textarea>
-                        <label for="stdname">Stadium Name</label>
-                    </div>
+                        <label for="dropstd">Choose Stadium</label>
+                        <select name="stdname" id="dropstd" required >
+                                <!-- Dropdown menu links -->
+                                    <option disabled selected>--</option>
+                                    {% for sr in stadiumres %}
+                                        <option value="{{sr.name}}"><a style="cursor: pointer;">{{sr.name}}</a></option>
+                                    {% endfor %}
+                        </select>
                     <br>
                     <div>
                         <label for="matchdt">Intended Match (date and time):</label>
-                        <input type="datetime-local" id="matchdt" name="matchdt">
+                                <select name="matchdt" id="dropdown" required >
+                                <!-- Dropdown menu links -->
+                                    <option disabled selected>--</option>
+                                    {% for hm in hostmatches %}
+                                        <option value="{{hm.start_time}}"><a style="cursor: pointer;">{{hm.host_club}} VS {{hm.guest_club}} ~ {{hm.start_time}}</a></option>
+                                    {% endfor %}
+                                </select>
                     </div>
 
                 </div>
