@@ -104,6 +104,9 @@ def login():
         if len(db.session.execute(f"SELECT * FROM Fan WHERE username = '{username}'").mappings().all()) == 1:
             type = 'fan'
             results = db.session.execute(f"SELECT * FROM Fan WHERE username = '{username}'").mappings().all()
+            if results[0].status == 0 :
+                flash('Sorry! You are blocked. Please report it if you think we made a mistake.')
+                return render_template("login.html")
 
         elif len(db.session.execute(f"SELECT * FROM SystemAdmin WHERE username = '{username}'").mappings().all()) == 1:
             type = 'system_admin'
@@ -252,7 +255,7 @@ def Register_Stadium_Manager_Function():
                  flash("username already taken!")
                  return redirect(url_for("Register_Stadium_Manager_Function"))
             else:        
-                flash("Club Representative Registeration Successful !")     
+                flash("Stadium Manager Registeration Successful !")     
                 sql2 = f""" exec addStadiumManager '{name}', '{mangaed_stadium}', '{username}', '{password}' """                                      
                 db.session.execute(sql2)
                 db.session.commit()        
@@ -402,7 +405,6 @@ def Add_Match_Function():
     if(request.method == 'POST'):
         host_id = request.form['added host']
         guest_id = request.form['added Guest']
-        stadium_id =  request.form['stadium']
         start_time = timeForSQL_with_seconds(request.form['New_Match_Start_Time'])       
         end_time = timeForSQL_with_seconds(request.form['New_Match_End_Time'])        
         if(host_id == guest_id):

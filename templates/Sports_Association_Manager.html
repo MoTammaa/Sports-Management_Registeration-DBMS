@@ -28,12 +28,6 @@
 		  <option value='{{name.club_id}}'>{{name.name}}</option>
 		{% endfor %}
 	  </select><br><br>
-	<label> Stadium </label> 
-	<select name="stadium" required >
-		{% for name in stadiums %}
-		  <option value='{{name.ID}}'>{{name.name}}</option>
-		{% endfor %}
-	</select><br><br>
 	<label> Start Time </label>
 	<input onchange="validateDate()" id= "start_time" type="datetime-local" name="New_Match_Start_Time" required/> <br><br>
     <label> End Time </label>
