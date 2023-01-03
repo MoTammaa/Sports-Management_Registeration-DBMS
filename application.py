@@ -678,8 +678,8 @@ def Purchase_Ticket_Function():
                     and c1.name = '{host_name}'
                     and c2.name = '{guest_name}'
                  """    
-        there_is_match = db.session.execute(sql1)     
-        if(isEmpty(there_is_match)):
+        there_is_match = db.session.execute(sql1).mappings().all()
+        if(len(there_is_match )< 1):
             flash("There is NO Match With The Given Information !")
             return redirect(url_for("Purchase_Ticket_Function"))
         else:    
@@ -689,10 +689,11 @@ def Purchase_Ticket_Function():
                           and m.guest_club_ID = c2.club_id
                           and m.match_ID = t.match_ID
                           and t.status = 1
+                          AND m.match_ID = '{there_is_match[0].match_ID}'
 
                         """   
-             there_is_available_tickets  = db.session.execute(sql2)
-             if(isEmpty(there_is_available_tickets)):            
+             there_is_available_tickets  = db.session.execute(sql2).mappings().all()  
+             if(len(there_is_available_tickets)<1):            
                 flash("All Tickets Are Sold !")
                 return redirect(url_for("Purchase_Ticket_Function"))
              else:
