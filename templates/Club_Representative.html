@@ -133,6 +133,12 @@
                                         <option value="{{hm.start_time}}"><a style="cursor: pointer;">{{hm.host_club}} VS {{hm.guest_club}} ~ {{hm.start_time}}</a></option>
                                     {% endfor %}
                                 </select>
+                                <br><br>
+                        {% if hostmatches|length >0 %}
+                            <label style="color: gray;">DISCLAIMER: The System is showing only matches that has YOUR Club as Host and a stadium is not Approved yet</label>
+                        {% else %}
+                            <label style="color: red;">DISCLAIMER: The System is showing only matches that has YOUR Club as Host and a stadium is not Approved yet</label>
+                        {% endif %}
                     </div>
 
                 </div>

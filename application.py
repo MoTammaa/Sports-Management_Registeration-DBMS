@@ -292,6 +292,9 @@ def Register_Fan_Function():
         if(not isEmpty(result)):
             flash("username already taken!")
             return redirect(url_for("Register_Fan_Function"))
+        elif len(db.session.execute(f"SELECT * FROM Fan WHERE national_id = '{national_id}'").mappings().all()) > 0:
+            flash("National ID already used or Fan already registered")
+            return redirect(url_for("Register_Fan_Function"))
         else:
             # changing time format taken from html to be compatible with python and sql           
             time_formatted = timeForSQL_without_seconds(birth_date)   
@@ -511,11 +514,13 @@ def CRep():
     if request.method == 'POST':
         if 'datee' in request.form and len(str(request.form['datee'])) !=0:
             datee = str(request.form['datee'])
-            print(len(datee))
+            #print(len(datee))
             sql = f"""SELECT name,location,capacity FROM Stadium S WHERE
             NOT EXISTS( SELECT * FROM Match M WHERE S.ID = M.stadium_id
                 AND start_time >= '{datee}')"""                  
             stadiums = db.session.execute(sql).mappings().all()
+            if len(stadiums) <1:
+                flash(f"There is no stadiums available that has no matches after '{datee}'")
             
             return render_template("Club_Representative.html", stadiums=stadiums, club=club, matches=matches, hostmatches=hostmatches, stadiumres=stadiumres )
         else:
@@ -534,10 +539,69 @@ def CRstadium():
     club = db.session.execute(sql).mappings().all()[0]
     #print("dt: ",str(request.form['matchdt']), "std: ", request.form['stdname'])
 
+    if  ('matchdt' not in request.form ) or ('--' in str(request.form['matchdt'])) or ('stdname' not in request.form ) or request.form['stdname']=='--':
+        flash('Please Enter a valid match and stadium')
+        return render_template("Club_Representative.html")
+
     if len(db.session.execute(f"select mt.match_ID from Match mt where mt.host_club_ID = '{club.club_id}' and mt.start_time = '{request.form['matchdt']}'").mappings().all()) <1:
         flash("Cannot find the specified match or is invalid to request!")
         return redirect('/Club_Representative')
-        
+    
+    #check if there is not a similar pending request--------------------------------------------------------
+
+    try:
+        sql = f"""select TOP 1 c.club_id 
+                    from Club c
+                    where c.name = '{club.name}'  """
+        clubid = db.session.execute(sql).mappings().all()
+        if len(clubid) > 0:
+            clubid = clubid[0].club_id
+
+
+        sql = f"""select TOP 1 rep.ID
+                from ClubRepresentative rep
+                where rep.club_ID = '{clubid}'  """
+        repid = db.session.execute(sql).mappings().all()
+        if len(repid) > 0:
+            repid = repid[0].ID
+
+
+        sql = f"""select TOP 1 m.ID
+            from StadiumManager m
+            where m.stadium_ID = (select TOP 1 s.ID
+                                    from Stadium s
+                                    where s.name = '{request.form['stdname']}') """
+        manid = db.session.execute(sql).mappings().all()
+        if len(manid) > 0:
+            manid = manid[0].ID
+
+
+        sql = f"""select TOP 1 mt.match_ID
+                    from Match mt
+                    where mt.host_club_ID = '{clubid}'
+                    and mt.start_time = '{request.form['matchdt']}' """
+        matchid = db.session.execute(sql).mappings().all()
+        if len(matchid) > 0:
+            matchid = matchid[0].match_ID
+    except:
+        print("There's a small failure in checking... You can ignore it and your request will be submitted successfully")
+
+    # A request already exists check 
+    try:
+        sql = f"""select * from HostRequest R
+                where R.representative_ID = '{repid}'
+                and R.manager_ID = '{manid}' 
+                AND R.match_ID = '{matchid}' 
+                AND R.status = 'Unhandled'  """
+        myrequests = db.session.execute(sql).mappings().all()
+
+        if len(myrequests) > 0:
+            flash("You already sent a request of the same match to the same Stadium Manager & this request is still Pending. You cannot send another request until the Manager accepts or rejects!") 
+            return redirect('/Club_Representative')
+    except:
+        print("Couldn't check for the already available request")
+       
+    #-----------------------------------------------------------------------------------------------
 
     sql = f"EXEC addHostRequest '{club.name}', '{request.form['stdname']}','{request.form['matchdt']}'"                
     db.session.execute(sql)
