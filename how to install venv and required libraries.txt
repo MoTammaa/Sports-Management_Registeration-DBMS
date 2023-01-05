@@ -1,0 +1,8 @@
+Steps to install venv , and to install required libraries
+
+- delete venv folder from the project folder if it exists 
+- open the start menu
+- run cmd.exe
+- cd to the project folder(e.g.: cd C:\Users\Dell\Desktop\db-project)
+- create venv directory (python3 -m venv venv)
+- install required libraries (pip install -r requirements.txt)
