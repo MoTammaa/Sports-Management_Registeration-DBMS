@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 
 
 {% extends "layout.html" %}
 
 {% block title %}
-    Sports Association Manager
+Sports Association Manager
 {% endblock %}
 
 {% block main %}
@@ -14,81 +13,106 @@
 
 <hr>
 
-<h2> Add Match </h2> <br><br>
-<form action="/add_match" method="post">
-	<label> Choose a Club To Host </label>
-	<select name="added host" required >
-		{% for name in club_names1 %}
-		  <option value='{{name.club_id}}'>{{name.name}}</option>
-		{% endfor %}
-	  </select><br><br>
-    <label> Choose a Club To Guest </label>
-	<select name="added Guest" required >
-		{% for name in club_names2 %}
-		  <option value='{{name.club_id}}'>{{name.name}}</option>
-		{% endfor %}
-	  </select><br><br>
-	<label> Start Time </label>
-	<input onchange="validateDate()" id= "start_time" type="datetime-local" name="New_Match_Start_Time" required/> <br><br>
-    <label> End Time </label>
-	<input onchange="validateDate()" id= "end_time" type="datetime-local" name="New_Match_End_Time" required /> <br><br>
-	<input type="submit" value="Add Match">
-</form>
 
-<hr>
+<!-- scroll spy here -->
+<div class="row">
+	<div class="col-2">
+		<div id="list-example" class="list-group floating">
+			<a class="list-group-item list-group-item-action" href="#add-1">Add Match</a>
+			<a class="list-group-item list-group-item-action" href="#delete-2">Delete Match</a>
+			<a class="list-group-item list-group-item-action" href="#misc-3">Miscellaneous</a>
+		</div>
+	</div>
+	<div class="col-8">
+		<div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example"
+			tabindex="0">
 
-<<h2> Delete Match </h2> <br><br>
-<form action="/delete_match" method="post">
-	<label> Host Name </label>
-	<select name="deleted host" required >
-		{% for name in club_names3 %}
-		  <option value='{{name.name}}'>{{name.name}}</option>
-		{% endfor %}
-	  </select><br><br>
-    <label> Guest Name </label>
-	<select name="deleted guest" required >
-		{% for name in club_names4 %}
-		  <option value='{{name.name}}'>{{name.name}}</option>
-		{% endfor %}
-	  </select><br><br>
-	<label> Start Time </label>
-	<input  type="datetime-local" name="Deleted_Match_Start_Time" required/> <br><br>
-    <label> End Time </label>
-	<input type="datetime-local" name="Deleted_Match_End_Time"/ required> <br><br>
-	<input type="submit" value="Delete Match">
-</form>
+			<h2> Add Match </h2> <br><br>
+			<form id="add-1" action="/add_match" method="post">
+				<label> Choose a Club To Host </label>
+				<select name="added host" required>
+					{% for name in club_names1 %}
+					<option value='{{name.club_id}}'>{{name.name}}</option>
+					{% endfor %}
+				</select><br><br>
+				<label> Choose a Club To Guest </label>
+				<select name="added Guest" required>
+					{% for name in club_names2 %}
+					<option value='{{name.club_id}}'>{{name.name}}</option>
+					{% endfor %}
+				</select><br><br>
+				<label> Start Time </label>
+				<input onchange="validateDate()" id="start_time" type="datetime-local" name="New_Match_Start_Time"
+					required /> <br><br>
+				<label> End Time </label>
+				<input onchange="validateDate()" id="end_time" type="datetime-local" name="New_Match_End_Time"
+					required /> <br><br>
+				<input type="submit" value="Add Match">
+			</form>
 
-<hr>
+			<hr>
 
-<button onclick="location.href = '/all_upcoming_matches';" class="btn btn-secondary ml-3"> Show all upcoming matches </button><br><br>
+			<h2> Delete Match </h2> <br><br>
+			<form id="delete-2" action="/delete_match" method="post">
+				<label> Host Name </label>
+				<select name="deleted host" required>
+					{% for name in club_names3 %}
+					<option value='{{name.name}}'>{{name.name}}</option>
+					{% endfor %}
+				</select><br><br>
+				<label> Guest Name </label>
+				<select name="deleted guest" required>
+					{% for name in club_names4 %}
+					<option value='{{name.name}}'>{{name.name}}</option>
+					{% endfor %}
+				</select><br><br>
+				<label> Start Time </label>
+				<input type="datetime-local" name="Deleted_Match_Start_Time" required /> <br><br>
+				<label> End Time </label>
+				<input type="datetime-local" name="Deleted_Match_End_Time" required> <br><br>
+				<input type="submit" value="Delete Match">
+			</form>
 
-<button onclick="location.href = '/already_played_matches';" class="btn btn-secondary ml-3"> Show already played matches </button><br><br>
+			<hr>
 
-<button onclick="location.href = '/pairs_never_matched';" class="btn btn-secondary ml-3"> Show paira of clubs who never competed </button>
+			<h2> Miscellaneous </h2> <br><br>
 
+			<button onclick="location.href = '/all_upcoming_matches';" class="btn btn-secondary ml-3"> Show all upcoming
+				matches </button><br><br>
+
+			<button id="misc-3" onclick="location.href = '/already_played_matches';" class="btn btn-secondary ml-3"> Show already
+				played matches </button><br><br>
+
+			<button onclick="location.href = '/pairs_never_matched';" class="btn btn-secondary ml-3"> Show pairs of
+				clubs who never competed </button>
+
+
+		</div>
+	</div>
+</div>
 
 <hr>
 
 <script>
-	function validateDate(){
-	  var start_time = new Date(document.getElementById("start_time").value);
-	  var end_time = new Date(document.getElementById("end_time").value);
-	  var current_date = new Date();
+	function validateDate() {
+		var start_time = new Date(document.getElementById("start_time").value);
+		var end_time = new Date(document.getElementById("end_time").value);
+		var current_date = new Date();
 
-	  if(current_date - start_time > 59999){
-		 alert("lets go to the past and play the match , BALABIZO ! :)");
-		 document.getElementById("start_time").value = null;
-	  }
-	  else if(end_time < start_time){
-		alert("Such a cool match that will end before it starts ! :)");
-		document.getElementById("end_time").value = null;
+		if (current_date - start_time > 59999) {
+			alert("lets go to the past and play the match , BALABIZO ! :)");
+			document.getElementById("start_time").value = null;
+		}
+		else if (end_time < start_time) {
+			alert("Such a cool match that will end before it starts ! :)");
+			document.getElementById("end_time").value = null;
 
-	  }
-	  else if(end_time - start_time <= 59999){
-		alert("you made Physics Sad , running and movement with no time ? )");
-		document.getElementById("end_time").value = null;
+		}
+		else if (end_time - start_time <= 59999) {
+			alert("you made Physics Sad , running and movement with no time ? )");
+			document.getElementById("end_time").value = null;
 
-	  }
+		}
 	}
 </script>
 
