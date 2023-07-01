@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 {% extends "layout.html" %}
 
 {% block title %}
-    System Admin
+System Admin
 {% endblock %}
 
 {% block main %}
@@ -12,68 +11,85 @@
 
 <hr>
 
-<h2> Add Club </h2> <br>
-<form action="/add_club" method="post">
-	<label> Club Name </label>
-	<input type="text" name="Added_club_name" maxlength="20" required/> 
-	<label> Club Location </label>
-	<input type="text" name="Added_club_location" maxlength="20" required/> <br><br>
-	<input type="submit" value="Add Club"> <br><br>
-</form>
+<!-- scroll spy here -->
+<div class="row">
+	<div class="col-4">
+		<div id="list-example" class="list-group floating">
+			<a class="list-group-item list-group-item-action" href="#addC-0">Add Club</a>
+			<a class="list-group-item list-group-item-action" href="#delete-1">Delete Club</a>
+			<a class="list-group-item list-group-item-action" href="#add-2">Add Stadium</a>
+			<a class="list-group-item list-group-item-action" href="#deleteS-3">Delete Stadium</a>
+			<a class="list-group-item list-group-item-action" href="#block-4">Block Fan</a>
+		</div>
+	</div>
+	<div class="col-8">
+		<div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example"
+			tabindex="0">
 
-<hr>
+			<h2> Add Club </h2> <br>
+			<form id="addC-0" action="/add_club" method="post">
+				<label> Club Name </label>
+				<input type="text" name="Added_club_name" maxlength="20" required />
+				<label> Club Location </label>
+				<input type="text" name="Added_club_location" maxlength="20" required /> <br><br>
+				<input type="submit" value="Add Club"> <br><br>
+			</form>
 
-<h2>Delete Club </h2> <br>
-<form action="/delete_club" method="post">
-	<label> Choose a Club to Delete </label> 	
-	<select name="deleted club" required >
-		{% for name in club_names %}
-		  <option value= '{{name.name}}'>{{name.name}}</option>
-		{% endfor %}
-	  </select><br><br>
-	<input type="submit" value="Delete Club"><br><br>
-</form>
+			<hr>
+			<h2>Delete Club </h2> <br>
+			<form id="delete-1" action="/delete_club" method="post">
+				<label> Choose a Club to Delete </label>
+				<select name="deleted club" required>
+					{% for name in club_names %}
+					<option value='{{name.name}}'>{{name.name}}</option>
+					{% endfor %}
+				</select><br><br>
+				<input type="submit" value="Delete Club"><br><br>
+			</form>
 
-<hr>
+			<hr>
 
-<h2>Add Stadium </h2><br>
-<form action="/add_stadium" method="post">
-	<label> Stadium Name </label> 	
-	<input type="text" name="Added_stadium_name" maxlength="20" required/> 
-	<label> Stadium Location </label> 	
-	<input type="text" name="Added_stadium_location" maxlength="20" required/> 
-	<label> Stadium Capacity </label> 	
-	<input type="number" name="Added_stadium_capacity" min = "0" max = "2147483647" required/> <br><br>
-	<input type="submit" value="Add Stadium"> <br><br>
-</form>
+			<h2 id="add-2">Add Stadium </h2><br>
+			<form action="/add_stadium" method="post">
+				<label> Stadium Name </label>
+				<input type="text" name="Added_stadium_name" maxlength="20" required />
+				<label> Stadium Location </label>
+				<input type="text" name="Added_stadium_location" maxlength="20" required />
+				<label> Stadium Capacity </label>
+				<input type="number" name="Added_stadium_capacity" min="0" max="2147483647" required /> <br><br>
+				<input type="submit" value="Add Stadium"> <br><br>
+			</form>
 
-<hr>
+			<hr>
 
-<h2>Delete Stadium </h2><br>
-<form action="/delete_stadium" method="post">
-	<label> Choose a Stadium To Delete </label> 	
-	<select name="deleted Stadium" required >
-		{% for name in stadium_names %}
-		  <option value='{{name.name}}'>{{name.name}}</option>
-		{% endfor %}
-	  </select><br><br>
-	<input type="submit" value="Delete Stadium"> <br><br>
-</form>
+			<h2 id="deleteS-3">Delete Stadium </h2><br>
+			<form action="/delete_stadium" method="post">
+				<label> Choose a Stadium To Delete </label>
+				<select name="deleted Stadium" required>
+					{% for name in stadium_names %}
+					<option value='{{name.name}}'>{{name.name}}</option>
+					{% endfor %}
+				</select><br><br>
+				<input type="submit" value="Delete Stadium"> <br><br>
+			</form>
 
-<hr>
+			<hr>
 
-<h2>Block Fan </h2><br>
-<form action="/block_fan" method="post">
-	<label> Fan National ID </label> 	
-	<input type="text" name="Blocked_Fan_national_id" maxlength="20" required> <br><br>
-	<input type="submit" value="Block Fan"> <br><br>
-</form>
+			<h2 id="block-4">Block Fan </h2><br>
+			<form action="/block_fan" method="post">
+				<label> Fan National ID </label>
+				<input type="text" name="Blocked_Fan_national_id" maxlength="20" required> <br><br>
+				<input type="submit" value="Block Fan"> <br><br>
+			</form>
 
-<hr>
+			<hr>
+
+		</div>
+	</div>
+</div>
 
 
 
 
 
 {% endblock %}
-

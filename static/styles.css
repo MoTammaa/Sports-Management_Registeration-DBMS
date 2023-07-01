@@ -22,6 +22,12 @@
   padding: 0.3rem !important;
 }
 
+.floating {
+  position: fixed;
+  top: 20vh; /* Adjust the top position as needed */
+  left: 10vw; /* Adjust the left position as needed */
+}
+
 .tFont
 {
   font-size: min(max(22px,6vw), 32px);
