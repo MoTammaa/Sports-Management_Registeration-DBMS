@@ -12,11 +12,11 @@
 <h1>Stadium Manager Registration</h1><br><br>
 <form action="/register_stadium_manager" method="post">
     
-    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text" maxlength="20" required><br>
-    <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password" maxlength="20" required><br>
-    <input class="form-control mx-auto w-auto"  name="Full Name" placeholder="Full Name" type="text" maxlength="20" required><br>
+    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="*Username" type="text" maxlength="20" required style="font-size: medium;"><br>
+    <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="*Password" type="password" maxlength="20" required style="font-size: medium;"><br>
+    <input class="form-control mx-auto w-auto"  name="Full Name" placeholder="*Full Name" type="text" maxlength="20" required style="font-size: medium;"><br>
 
-    <label>Choose a Stadium to Manage </label>
+    <label>*Choose a Stadium to Manage </label>
     <select name="Managed Stadium" required >
       {% for name in names %}
         <option value="{{name}}">{{name}}</option>

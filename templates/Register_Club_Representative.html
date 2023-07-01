@@ -12,12 +12,12 @@
 <h1>Club Representative Registration</h1><br><br>
 <form action="/register_club_representative" method="post">
     
-    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text" maxlength="20" required><br>
-    <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password" maxlength="20" required><br>
-    <input class="form-control mx-auto w-auto"  name="Full Name" placeholder="Full Name" type="text" maxlength="20" required><br>
+    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="*Username" type="text" maxlength="20" required style="font-size: medium;"><br>
+    <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="*Password" type="password" maxlength="20" required style="font-size: medium;"><br>
+    <input class="form-control mx-auto w-auto"  name="Full Name" placeholder="*Full Name" type="text" maxlength="20" required style="font-size: medium;"><br>
     
 
-    <label >Choose a Club to Represent</label>
+    <label >*Choose a Club to Represent</label>
     <select name="Represented Club" required >
       {% for club in clubs %}
         <option value="{{club.name}}">{{club.name}}</option>
