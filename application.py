@@ -502,14 +502,19 @@ def CRep():
     sql = f"SELECT * FROM Club WHERE club_id = (SELECT club_id FROM ClubRepresentative WHERE username = '{session['username']}')"                  
     club = db.session.execute(sql).mappings().all()
 
-    sql = f"SELECT * FROM dbo.upcomingMatchesOfClub('{club[0].name}')"                
-    matches = db.session.execute(sql).mappings().all()
+    if len(club) == 0:
+        matches = []
+        hostmatches = []
+        stadiumres = []
+    else:
+        sql = f"SELECT * FROM dbo.upcomingMatchesOfClub('{club[0].name}')"                
+        matches = db.session.execute(sql).mappings().all()
 
-    sql = f"SELECT * FROM dbo.upcomingMatchesOfClub('{club[0].name}') WHERE host_club = '{club[0].name}' AND stadium IS NULL"                
-    hostmatches = db.session.execute(sql).mappings().all()
+        sql = f"SELECT * FROM dbo.upcomingMatchesOfClub('{club[0].name}') WHERE host_club = '{club[0].name}' AND stadium IS NULL"                
+        hostmatches = db.session.execute(sql).mappings().all()
 
-    sql = "SELECT name FROM Stadium"
-    stadiumres = db.session.execute(sql).mappings().all()
+        sql = "SELECT name FROM Stadium"
+        stadiumres = db.session.execute(sql).mappings().all()
 
     if request.method == 'POST':
         if 'datee' in request.form and len(str(request.form['datee'])) !=0:

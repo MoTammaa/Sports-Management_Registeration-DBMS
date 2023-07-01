@@ -52,11 +52,11 @@
                 <td>__</td>
             {% else %}
                 <td>
-                    <form action="/Stadium_Manager/accept" method="post">
+                    <form class="nothing" action="/Stadium_Manager/accept" method="post">
                         <input type="hidden" name="hostC" value="{{r.host}}">
                         <input type="hidden" name="guestC" value="{{r.guest}}">
                         <input type="hidden" name="start" value="{{r.start_time}}">
-                        <button type="submit" class="btn btn-success">Accept</button>
+                        <button style="max-height: 40px;" type="submit" class="btn btn-success">Accept</button>
                     </form>
                 </td>
             {% endif %}
@@ -64,11 +64,11 @@
                 <td>__</td>
             {% else %}
                 <td>
-                    <form action="/Stadium_Manager/reject" method="post">
+                    <form class="nothing" action="/Stadium_Manager/reject" method="post">
                         <input type="hidden" name="hostC" value="{{r.host}}">
                         <input type="hidden" name="guestC" value="{{r.guest}}">
                         <input type="hidden" name="start" value="{{r.start_time}}">
-                        <button type="submit" class="btn btn-danger">Reject</button>
+                        <button style="max-height: 40px;" type="submit" class="btn btn-danger">Reject</button>
                     </form>
                 </td>
             {% endif %}
