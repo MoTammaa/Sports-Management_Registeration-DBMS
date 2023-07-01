@@ -1,3 +1,23 @@
+@media screen and (orientation: landscape) {
+  .homepic 
+  {
+    width: 50% !important;
+
+  }
+}
+@media screen and (orientation: portrait) {
+  .homepic 
+  {
+    width: 90% !important;
+
+  }
+}
+
+.tFont
+{
+  font-size: min(max(22px,6vw), 32px);
+}
+
 /* Size for brand */
 nav .navbar-brand
 {
