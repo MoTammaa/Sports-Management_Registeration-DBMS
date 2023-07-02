@@ -706,8 +706,8 @@ def Purchase_Ticket_Function():
                   sql3 = f"""exec purchaseTicket '{fan_National_ID}', '{host_name}', '{guest_name}', '{start_time}' """ 
                   db.session.execute(sql3)
                   db.session.commit()
-                  flash("Ticket Purchased Successfully !")
-                  return redirect(url_for("Purchase_Ticket_Function"))
+                  #flash("Ticket Purchased Successfully !")
+                  return redirect(url_for('Payment', username=session["username"], match=(host_name+'_VS_'+guest_name)))       # old code:: redirect(url_for("Purchase_Ticket_Function"))
     else:
         return redirect(url_for("Fan_Function"))
 
@@ -718,22 +718,34 @@ def View_Matches_Function():
     if(request.method == 'POST'):
         
         time = timeForSQL_without_seconds(request.form['m_start_time'])
-        sql = f"""select c1.name as hostName, c2.name as guestName , s.name as stadiumName , s.location as loc
+        sql = f"""select c1.name as hostName, c2.name as guestName , s.name as stadiumName , s.location as loc, m.start_time as startTime
                   from Club c1 , Club c2 , Match m , Stadium s
                   where c1.club_id = m.host_club_ID
                         and c2.club_id = m.guest_club_ID
                         and m.stadium_ID = s.ID
-                        and m.start_time = '{time}'
+                        and m.start_time >= '{time}'
                         and exists (select *
                                      from Ticket t
                                      where t.status = 1
                                            and t.match_ID = m.match_ID)        
                  """
         data = db.session.execute(sql).fetchall()
-        headers = ["#","Host Club", "Guest Club", "Stadium Name", "Stadium Location"]
-        return render_template("/table.html" ,viewName = f"All Matches That Have Available Tickets Starting At {time} ", headers = headers , data = data)
+        headers = ["#","Host Club", "Guest Club", "Stadium Name", "Stadium Location", "Start Time"]
+        return render_template("/table.html" ,viewName = f"All Matches That Have Available Tickets Starting From & After {time} ", headers = headers , data = data)
     else:
         return redirect(url_for("Fan_Function"))    
+    
+
+#----------------------------------------------------------------------------------Payment pages
+@app.route("/payment", methods = ['GET','POST'])
+@login_required
+def Payment():
+    if(request.method == 'POST'):
+        flash("Ticket Purchased Successfully !")
+        return redirect('/fan')
+    if(request.args.get('username') == None or request.args.get('match') == None):
+        return redirect('/fan')
+    return render_template("Payment.html")
     
 #----------------------------------------------------------------------------------examples (to be delted)
 # @app.route("/clubs")
