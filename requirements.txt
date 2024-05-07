@@ -10,4 +10,4 @@ MarkupSafe==2.1.1
 pyodbc==4.0.35
 SQLAlchemy==1.4.45
 Werkzeug==3.0.3
-gunicorn==20.1.0
+gunicorn==22.0.0
